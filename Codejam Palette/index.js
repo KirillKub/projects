@@ -3,34 +3,43 @@ let isDraw = false;
 let isPaintBucket = false; 
 let isChooseColor = false;
 let color = '#FFC107';
-let colorPrev = ''
+let colorPrev = '';
 document.getElementById('swapPrevColor').style.background = '#FFEB3B'
 document.getElementById('inputColor').value = '#FFC107';
-
 function draw(){
-  const getArr = async (url) => {
-    try {
-      const arr = await fetch(url).then(responce => responce.json())
-      return arr;
-    } catch(err){
-      console.log(err)
-    }
-  }
-  let canvasSize = 512;
-  let mas = getArr('https://raw.githubusercontent.com/rolling-scopes-school/tasks/master/tasks/stage-2/codejam-canvas/data/4x4.json')
   let canvas = document.getElementById('canvas');
   let ctx = canvas.getContext('2d');
-  mas.then(data => {
-    for(let i = 0; i < data.length; i++){
-      for(let j = 0; j < data.length; j++){
-        let x = canvasSize / data.length * i;
-        let y = canvasSize / data.length * j;
-        let res = `#${data[i][j]}`;
-        ctx.fillStyle = res;
-        ctx.fillRect(x, y, canvasSize / data.length, canvasSize / data.length);
+   if(localStorage.getItem('canvas')){
+    let dataURL = localStorage.getItem('canvas');
+    let img = new Image;
+    img.src = dataURL;
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+  };
+  }
+  else {
+    const getArr = async (url) => {
+      try {
+        const arr = await fetch(url).then(responce => responce.json())
+        return arr;
+      } catch(err){
+        console.log(err)
       }
     }
-  })
+    let canvasSize = 512;
+    let mas = getArr('https://raw.githubusercontent.com/rolling-scopes-school/tasks/master/tasks/stage-2/codejam-canvas/data/4x4.json')
+    mas.then(data => {
+      for(let i = 0; i < data.length; i++){
+        for(let j = 0; j < data.length; j++){
+          let x = canvasSize / data.length * i;
+          let y = canvasSize / data.length * j;
+          let res = `#${data[i][j]}`;
+          ctx.fillStyle = res;
+          ctx.fillRect(x, y, canvasSize / data.length, canvasSize / data.length);
+        }
+      }
+    })
+  }
 }
 
 document.getElementById('mainItems').addEventListener('click', function(event){
@@ -79,6 +88,7 @@ document.getElementById('canvas').addEventListener('mousemove', function(event){
   if(isDraw){
     let x = event.offsetX;
     let y = event.offsetY;
+    ctx.lineWidth = 4;
     ctx.lineTo(x,y)
     ctx.stroke();
   }
@@ -86,6 +96,7 @@ document.getElementById('canvas').addEventListener('mousemove', function(event){
 
 document.getElementById('canvas').addEventListener('mouseup', function(){
   isDraw = false;
+  localStorage.setItem('canvas', canvas.toDataURL());
 })
 
 document.getElementById('canvas').addEventListener('mousedown',function(event){
@@ -94,14 +105,16 @@ document.getElementById('canvas').addEventListener('mousedown',function(event){
     let x = event.offsetX;
     let y = event.offsetY;
     ctx.fillStyle = color
-    ctx.fillRect(x,y,2,2)
+    ctx.fillRect(x,y,4,4)
+    localStorage.setItem('canvas', canvas.toDataURL());
   }
 })
 
-document.getElementById('canvas').addEventListener('click',function(event){
+document.getElementById('canvas').addEventListener('click',function(){
   if(isPaintBucket){
     ctx.fillStyle = color;
     ctx.fillRect(0,0,512,512);
+    localStorage.setItem('canvas', canvas.toDataURL());
   }
 })
 
@@ -163,8 +176,6 @@ function colorNow(){
   ctx.strokeStyle = color;
 }
 
-draw();
-
 document.addEventListener('keydown',function(event){
   if(event.code === 'KeyB'){
     document.getElementById('paintBucket').classList.add('active');
@@ -191,3 +202,5 @@ document.addEventListener('keydown',function(event){
     document.getElementById('chooseColor').classList.remove('active');
   }
 })
+
+draw();
