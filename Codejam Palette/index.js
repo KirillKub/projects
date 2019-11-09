@@ -36,7 +36,7 @@ function draw(){
 document.getElementById('mainItems').addEventListener('click', function(event){
   let target = event.target
   let element = target.closest('div');
-  if(element.className === 'main__items')
+  if(element.className === 'main__items' || element.id === 'transform')
     return;
   element.classList.add('active');
   if(element.id === 'pencil'){
@@ -51,6 +51,7 @@ document.getElementById('mainItems').addEventListener('click', function(event){
     isChooseColor = false;
     isPaintBucket = true;
     document.getElementById('chooseColor').classList.remove('active');
+    document.getElementById('pencil').classList.remove('active');
   }
   if(element.id === 'chooseColor'){
     isPencil = false;
@@ -83,10 +84,26 @@ document.getElementById('canvas').addEventListener('mousemove', function(event){
   }
 })
 
-document.getElementById('canvas').addEventListener('mouseup', function(event){
+document.getElementById('canvas').addEventListener('mouseup', function(){
   isDraw = false;
 })
 
+document.getElementById('canvas').addEventListener('mousedown',function(event){
+  if(isPencil)
+  { 
+    let x = event.offsetX;
+    let y = event.offsetY;
+    ctx.fillStyle = color
+    ctx.fillRect(x,y,2,2)
+  }
+})
+
+document.getElementById('canvas').addEventListener('click',function(event){
+  if(isPaintBucket){
+    ctx.fillStyle = color;
+    ctx.fillRect(0,0,512,512);
+  }
+})
 
 document.getElementById('mainColors').addEventListener('click', function(event){
   let target = event.target
@@ -113,41 +130,17 @@ document.getElementById('mainColors').addEventListener('click', function(event){
   document.getElementById('inputColor').value = color;
   color = color;
 })
+
 document.getElementById('canvas').addEventListener('click', function(event){
   if(isChooseColor){
     let x = event.offsetX;
     let y = event.offsetY;
-    let a = 128
-    for(let i = 0; i < 4; i++){
-          if(x <= a){ 
-            x = a;
-            a = 128;
-            break;
-          }
-          a += 128;
-      }
-    for(let i = 0; i < 4; i++){
-        if(y <= a){
-          y = a;
-          break
-        }
-        a += 128;
-      }
-      const getArr = async (url) => {
-        try {
-          const arr = await fetch(url).then(responce => responce.json())
-          return arr;
-        } catch(err){
-          console.log(err)
-        }
-      }
-      let mas = getArr('https://raw.githubusercontent.com/rolling-scopes-school/tasks/master/tasks/stage-2/codejam-canvas/data/4x4.json')
-      mas.then(data => {
-            document.getElementById('swapPrevColor').style.background = color;
-            color = `#${data[x/128 - 1][y/128 - 1]}`;
-            document.getElementById('swapCurrentColor').style.background = color;
-            document.getElementById('inputColor').value = color;
-      })
+    let test = ctx.getImageData(x, y, 1, 1).data;
+    rgb = `rgb(${test[0]}, ${test[1]}, ${test[2]})`;
+    document.getElementById('swapPrevColor').style.background = color;
+    color = rgbToHex(rgb);
+    document.getElementById('swapCurrentColor').style.background = color;
+    document.getElementById('inputColor').value = color;
   }
 })
 
@@ -171,3 +164,30 @@ function colorNow(){
 }
 
 draw();
+
+document.addEventListener('keydown',function(event){
+  if(event.code === 'KeyB'){
+    document.getElementById('paintBucket').classList.add('active');
+    isPencil = false;
+    isChooseColor = false;
+    isPaintBucket = true;
+    document.getElementById('pencil').classList.remove('active');
+    document.getElementById('chooseColor').classList.remove('active');
+  }
+  if(event.code === 'KeyC'){
+    document.getElementById('chooseColor').classList.add('active');
+    isPencil = false;
+    isChooseColor = true;
+    isPaintBucket = false;
+    document.getElementById('paintBucket').classList.remove('active');
+    document.getElementById('pencil').classList.remove('active');
+  }
+  if(event.code === 'KeyP'){
+    document.getElementById('pencil').classList.add('active');
+    isPencil = true;
+    isChooseColor = false;
+    isPaintBucket = false;
+    document.getElementById('paintBucket').classList.remove('active');
+    document.getElementById('chooseColor').classList.remove('active');
+  }
+})

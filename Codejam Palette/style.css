@@ -183,3 +183,7 @@ canvas{
 .main__colors div:hover{
     cursor: pointer;
 }
+
+#transform{
+    opacity: 0.4;
+}
