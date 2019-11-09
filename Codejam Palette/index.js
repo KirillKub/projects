@@ -86,11 +86,27 @@ document.getElementById('canvas').addEventListener('mousedown', function(event){
 
 document.getElementById('canvas').addEventListener('mousemove', function(event){
   if(isDraw){
+    // let x = event.offsetX;
+    // let y = event.offsetY;
+    // ctx.lineWidth = 128;
+    // ctx.lineTo(x,y)
+    // ctx.stroke();
     let x = event.offsetX;
     let y = event.offsetY;
-    ctx.lineWidth = 4;
-    ctx.lineTo(x,y)
-    ctx.stroke();
+    for(let i = 1; i <= 4; i++){
+      if(x < 128 * i){
+        x = 128 * (i - 1);
+        break;
+      }
+    }
+    for(let i = 1; i <= 4; i++){
+      if(y < 128 * i){
+        y = 128 * (i - 1);
+        break;
+      }
+    }
+    ctx.fillStyle = color;
+    ctx.fillRect(x,y,128,128);
   }
 })
 
@@ -104,8 +120,20 @@ document.getElementById('canvas').addEventListener('mousedown',function(event){
   { 
     let x = event.offsetX;
     let y = event.offsetY;
-    ctx.fillStyle = color
-    ctx.fillRect(x,y,4,4)
+    for(let i = 1; i <= 4; i++){
+      if(x < 128 * i){
+        x = 128 * (i - 1);
+        break;
+      }
+    }
+    for(let i = 1; i <= 4; i++){
+      if(y < 128 * i){
+        y = 128 * (i - 1);
+        break;
+      }
+    }
+    ctx.fillStyle = color;
+    ctx.fillRect(x,y,128,128);
     localStorage.setItem('canvas', canvas.toDataURL());
   }
 })
