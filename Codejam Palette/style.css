@@ -44,6 +44,9 @@ main{
     height: 246px;
     margin-top:79px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.24), 0px 0px 4px rgba(0, 0, 0, 0.12);
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
 }
 
 .main__items span{
@@ -68,7 +71,6 @@ main{
 .main__items-box{
     display: flex;
     align-items: center;
-    padding-top:25px;
 }
 
 .main__items-box img[alt=fill]{
@@ -79,7 +81,7 @@ main{
     margin:0 35px 0 18px;
 }
 
-.main__items-box img[alt=move]{
+.main__items-box img[alt=pencil]{
     margin:0 35px 0 18px;
 }
 
@@ -91,25 +93,30 @@ main{
     border-top: 1px solid black;
 }
 
-.main__items div:nth-child(2){
-    padding-bottom: 25px;
-    border-bottom:1px solid rgba(0, 0, 0, 0.12);
-}
-
 .circle-current{
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #C4C4C4;
+    background: #FFC107;
     border: 1px solid #000000;
     margin: 0 18px 0 18px;
+}
+
+input[type="color"]{
+    margin-left: 25px;
+    border: 0;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    outline: 0;
+    background:none;
 }
 
 .circle-prev{
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #41F795;
+    background: #FFEB3B;
     border: 1px solid #000000;
     margin: 0 18px 0 18px;
 }
@@ -118,7 +125,7 @@ main{
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #41B6F7;
+    background: #0088ff;
     border: 1px solid #000000;
     margin: 0 18px 0 18px;
 }
@@ -162,4 +169,17 @@ main{
 
 canvas{
     background: lightgrey;
+}
+
+#pencil:hover, #chooseColor:hover, #paintBucket:hover{
+    cursor: pointer;
+    background: lightgray;
+}
+
+.active{
+    background: lightskyblue;
+}
+
+.main__colors div:hover{
+    cursor: pointer;
 }

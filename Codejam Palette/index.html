@@ -20,17 +20,17 @@
     <main class="main">
         <div class="main__box">
             <div class="main__box-item">
-                <div class="main__items">
-                    <div class="main__items-box"><img src="assets/images/fill-drip.png" alt="fill"><span>Paint bucket</span></div>
-                    <div class="main__items-box"><img src="assets/images/icon-upload.png" alt="color"><span>Choose color</span></div>
-                    <div class="main__items-box"><img src="assets/images/icon-copy.png" alt="move"><span>Move</span></div>
+                <div class="main__items" id="mainItems">
+                    <div class="main__items-box" id="paintBucket"><img src="assets/images/fill-drip.png" alt="fill"><span>Paint bucket</span></div>
+                    <div class="main__items-box" id="chooseColor"><img src="assets/images/icon-upload.png" alt="color"><span>Choose color</span></div>
+                    <div class="main__items-box" id="pencil"><img src="assets/images/pencil.png" alt="pencil"><span>Pencil</span></div>
                     <div class="main__items-box"><img src="assets/images/icon-share.png" alt="transform"><span>Transform</span></div>
                 </div>
-                <div class="main__colors">
-                    <div class="main__colors-box"><div class="circle-current"></div><span>Current color</span></div>
-                    <div class="main__colors-box"><div class="circle-prev"></div><span>Prev color</span></div>
-                    <div class="main__colors-box"><div class="circle-red"></div><span>red</span></div>
-                    <div class="main__colors-box"><div class="circle-blue"></div><span>blue</span></div>
+                <div class="main__colors" id="mainColors">
+                    <div class="main__colors-box" id="currentColor"><div class="circle-current" id="swapCurrentColor"></div><span>Current color</span><input type="color" id="inputColor"></div>
+                    <div class="main__colors-box" id="prevColor"><div class="circle-prev" id="swapPrevColor"></div><span>Prev color</span></div>
+                    <div class="main__colors-box" id="red"><div class="circle-red"></div><span>red</span></div>
+                    <div class="main__colors-box" id="blue"><div class="circle-blue"></div><span>blue</span></div>
                 </div>
             </div>
             <div class="main__canvas">
