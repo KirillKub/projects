@@ -30,8 +30,8 @@ function draw() {
     mas.then((data) => {
       for (let i = 0; i < data.length; i += 1) {
         for (let j = 0; j < data.length; j += 1) {
-          const x = canvasSize / (data.length * i);
-          const y = canvasSize / (data.length * j);
+          const x = (canvasSize / data.length) * i;
+          const y = (canvasSize / data.length) * j;
           const res = `#${data[i][j]}`;
           ctx.fillStyle = res;
           ctx.fillRect(x, y, canvasSize / data.length, canvasSize / data.length);
