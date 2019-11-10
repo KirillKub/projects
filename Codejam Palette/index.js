@@ -118,6 +118,11 @@ document.getElementById('canvas').addEventListener('mouseup', () => {
   localStorage.setItem('canvas', canvas.toDataURL());
 });
 
+document.getElementById('canvas').addEventListener('mouseleave', () => {
+  isDraw = false;
+  localStorage.setItem('canvas', canvas.toDataURL());
+});
+
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (isPencil) {
     let x = event.offsetX;
