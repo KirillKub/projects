@@ -138,13 +138,13 @@ document.getElementById('canvas').addEventListener('mousedown',function(event){
   }
 })
 
-document.getElementById('canvas').addEventListener('click',function(){
-  if(isPaintBucket){
-    ctx.fillStyle = color;
-    ctx.fillRect(0,0,512,512);
-    localStorage.setItem('canvas', canvas.toDataURL());
-  }
-})
+// document.getElementById('canvas').addEventListener('click',function(){
+//   if(isPaintBucket){
+//     ctx.fillStyle = color;
+//     ctx.fillRect(0,0,512,512);
+//     localStorage.setItem('canvas', canvas.toDataURL());
+//   }
+// })
 
 document.getElementById('mainColors').addEventListener('click', function(event){
   let target = event.target
@@ -176,8 +176,8 @@ document.getElementById('canvas').addEventListener('click', function(event){
   if(isChooseColor){
     let x = event.offsetX;
     let y = event.offsetY;
-    let test = ctx.getImageData(x, y, 1, 1).data;
-    rgb = `rgb(${test[0]}, ${test[1]}, ${test[2]})`;
+    let colorPixel = ctx.getImageData(x, y, 1, 1).data;
+    let rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     document.getElementById('swapPrevColor').style.background = color;
     color = rgbToHex(rgb);
     document.getElementById('swapCurrentColor').style.background = color;
@@ -228,6 +228,73 @@ document.addEventListener('keydown',function(event){
     isPaintBucket = false;
     document.getElementById('paintBucket').classList.remove('active');
     document.getElementById('chooseColor').classList.remove('active');
+  }
+})
+document.getElementById('canvas').addEventListener('click', function(event){
+  if(isPaintBucket){
+    let x = event.offsetX;
+    let y = event.offsetY;
+    let colorPixel = ctx.getImageData(x, y, 1, 1).data;
+    let rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
+    let value = rgbToHex(rgb);
+    for(let i = 1; i <= 4; i++){
+      if(x < 128 * i){
+        x = 128 * (i - 1);
+        break;
+      }
+    }
+    for(let i = 1; i <= 4; i++){
+      if(y < 128 * i){
+        y = 128 * (i - 1);
+        break;
+      }
+    }
+    let pixels = [];
+    let pixelMeet = {}
+    pixelMeet[x + ' ' + y] = true;
+    ctx.fillStyle = color;
+    ctx.fillRect(x,y,128,128);
+
+    if(x != 384){
+      pixels.push([x+128,y])
+    }
+    if(x != 0){
+      pixels.push([x-128,y])
+    }
+    if(y != 384){
+      pixels.push([x,y+128])
+    }
+    if(y != 0){
+      pixels.push([x,y-128])
+    }
+    while(pixels.length > 0){
+        let pixel = pixels.pop();
+        let xNow = pixel[0];
+        let yNow = pixel[1];
+        if(pixelMeet[xNow + ' ' + yNow] == true){
+          continue;
+        }
+        pixelMeet[xNow + ' ' + yNow] = true;
+        let colorPixel2 = ctx.getImageData(xNow, yNow, 1, 1).data;
+        let rgb2 = `rgb(${colorPixel2[0]}, ${colorPixel2[1]}, ${colorPixel2[2]})`;
+        let value2 = rgbToHex(rgb2);
+        if(value2 == value){
+          ctx.fillRect(xNow,yNow,128,128);
+          if(xNow != 384 && pixelMeet[(+xNow + +128) + ' '+ yNow] != true){
+            pixels.push([xNow+128,yNow])
+          }
+          if(xNow != 0 && pixelMeet[(+xNow - +128) + ' '+ yNow] != true){
+            pixels.push([xNow-128,yNow])
+          }
+          if(yNow != 384 && pixelMeet[xNow + ' ' + (+yNow + +128)] != true){
+            pixels.push([xNow,yNow+128])
+          }
+          if(yNow != 0 &&  pixelMeet[xNow + ' ' + (+yNow - +128)] != true){
+            pixels.push([xNow,yNow-128])
+          }
+        }
+      }
+    localStorage.setItem('canvas', canvas.toDataURL());
   }
 })
 
