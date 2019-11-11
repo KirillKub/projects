@@ -89,11 +89,6 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
 
 document.getElementById('canvas').addEventListener('mousemove', (event) => {
   if (isDraw) {
-    // let x = event.offsetX;
-    // let y = event.offsetY;
-    // ctx.lineWidth = 128;
-    // ctx.lineTo(x,y)
-    // ctx.stroke();
     let x = event.offsetX;
     let y = event.offsetY;
     for (let i = 1; i <= 4; i += 1) {
@@ -203,22 +198,31 @@ document.addEventListener('keydown', (event) => {
     isPaintBucket = true;
     document.getElementById('pencil').classList.remove('active');
     document.getElementById('chooseColor').classList.remove('active');
+    document.getElementById('canvas').classList.remove('pencil');
+    document.getElementById('canvas').classList.remove('choose-color');
+    document.getElementById('canvas').classList.add('paint-bucket');
   }
   if (event.code === 'KeyC') {
     document.getElementById('chooseColor').classList.add('active');
     isPencil = false;
     isChooseColor = true;
     isPaintBucket = false;
+    document.getElementById('canvas').classList.add('choose-color');
     document.getElementById('paintBucket').classList.remove('active');
     document.getElementById('pencil').classList.remove('active');
+    document.getElementById('canvas').classList.remove('pencil');
+    document.getElementById('canvas').classList.remove('paint-bucket');
   }
   if (event.code === 'KeyP') {
     document.getElementById('pencil').classList.add('active');
     isPencil = true;
     isChooseColor = false;
     isPaintBucket = false;
+    document.getElementById('canvas').classList.add('pencil');
     document.getElementById('paintBucket').classList.remove('active');
     document.getElementById('chooseColor').classList.remove('active');
+    document.getElementById('canvas').classList.remove('choose-color');
+    document.getElementById('canvas').classList.remove('paint-bucket');
   }
 });
 document.getElementById('canvas').addEventListener('click', (event) => {
@@ -242,7 +246,7 @@ document.getElementById('canvas').addEventListener('click', (event) => {
     }
     const pixels = [];
     const pixelMeet = {};
-    pixels.push([x,y])
+    pixels.push([x, y]);
     ctx.fillStyle = color;
     while (pixels.length > 0) {
       const pixel = pixels.pop();
@@ -273,6 +277,24 @@ document.getElementById('canvas').addEventListener('click', (event) => {
     }
     localStorage.setItem('canvas', canvas.toDataURL());
   }
+});
+
+document.getElementById('canvas').addEventListener('mouseover', () => {
+  if (isPencil) {
+    document.getElementById('canvas').classList.add('pencil');
+  }
+  if (isChooseColor) {
+    document.getElementById('canvas').classList.add('choose-color');
+  }
+  if (isPaintBucket) {
+    document.getElementById('canvas').classList.add('paint-bucket');
+  }
+});
+
+document.getElementById('canvas').addEventListener('mouseleave', () => {
+  document.getElementById('canvas').classList.remove('pencil');
+  document.getElementById('canvas').classList.remove('choose-color');
+  document.getElementById('canvas').classList.remove('paint-bucket');
 });
 
 draw();

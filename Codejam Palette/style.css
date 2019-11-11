@@ -187,3 +187,15 @@ canvas{
 #transform{
     opacity: 0.4;
 }
+
+.pencil{
+    cursor: url('assets/images/pencil.png'),default;
+}
+
+.paint-bucket{
+    cursor: url('assets/images/fill-drip.png'),default;
+}
+
+.choose-color{
+    cursor: url('assets/images/icon-upload.png'),default;
+}
