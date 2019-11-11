@@ -242,22 +242,8 @@ document.getElementById('canvas').addEventListener('click', (event) => {
     }
     const pixels = [];
     const pixelMeet = {};
-    pixelMeet[`${x} ${y}`] = true;
+    pixels.push([x,y])
     ctx.fillStyle = color;
-    ctx.fillRect(x, y, 128, 128);
-
-    if (x !== 384) {
-      pixels.push([x + 128, y]);
-    }
-    if (x !== 0) {
-      pixels.push([x - 128, y]);
-    }
-    if (y !== 384) {
-      pixels.push([x, y + 128]);
-    }
-    if (y !== 0) {
-      pixels.push([x, y - 128]);
-    }
     while (pixels.length > 0) {
       const pixel = pixels.pop();
       const xNow = pixel[0];
