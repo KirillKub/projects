@@ -16,6 +16,34 @@ document.getElementById('inputColor').value = '#FFC107';
 //     };
 //   }
 
+async function searchImage(query){
+    const baseUrl = 'https://api.unsplash.com/photos/';
+    const queryString = `?${query}`;
+    const url = baseUrl + queryString;
+    try{
+        const responce = await fetch(url);
+        const data = await responce.json();
+        return data[0].urls.small;
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+document.getElementById('downloadImage').addEventListener('click',function(){
+    let image = searchImage('client_id=27cbaaa385dfdfd21301a5372e2aed7b0b3756e5bd9d222b2dac2ba201b0fe0d')
+    let canvas = document.getElementById('canvas');
+    let ctx = canvas.getContext('2d');
+    let img = new Image();
+    image.then(function(data){
+        img.src = data;
+        img.onload = function(){
+            ctx.drawImage(img,0,0,512,512);
+            }
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    })
+})
+
 function rgbToHex(str) {
   let rgbElements = str.slice(4, str.length - 1);
   rgbElements = rgbElements.split(', ');
