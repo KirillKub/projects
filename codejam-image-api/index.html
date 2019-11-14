@@ -4,9 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
-    
+    <header class="header">
+        <div class="header__box">
+            <div class="header__box-item">
+                <img src="assets/images/Shape.png" alt="menu">
+                <div class="header__text">CodeJam - Image API</div>
+            </div>
+            <img src="assets/images/shape2.png" alt="menu2">
+        </div>
+    </header>
+    <main class="main">
+        <div class="main__box">
+            <div class="main__box-item">
+                <div class="main__items" id="mainItems">
+                    <div class="main__items-box" id="paintBucket"><img src="assets/images/fill-drip.png" alt="fill"><span>Paint bucket</span></div>
+                    <div class="main__items-box" id="chooseColor"><img src="assets/images/icon-upload.png" alt="color"><span>Choose color</span></div>
+                    <div class="main__items-box" id="pencil"><img src="assets/images/pencil.png" alt="pencil"><span>Pencil</span></div>
+                    <div class="main__items-box" id="transform"><img src="assets/images/icon-share.png" alt="transform"><span>Transform</span></div>
+                </div>
+                <div class="main__colors" id="mainColors">
+                    <div class="main__colors-box" id="currentColor"><div class="circle-current" id="swapCurrentColor"></div><span>Current color</span><input type="color" id="inputColor"></div>
+                    <div class="main__colors-box" id="prevColor"><div class="circle-prev" id="swapPrevColor"></div><span>Prev color</span></div>
+                    <div class="main__colors-box" id="red"><div class="circle-red"></div><span>red</span></div>
+                    <div class="main__colors-box" id="blue"><div class="circle-blue"></div><span>blue</span></div>
+                </div>
+            </div>
+            <div class="main__canvas">
+                <div class="main__canvas-buttons">
+                    <div>
+                        <button>Load</button>
+                        <input type="text">    
+                    </div>    
+                    <button>B&W</button>
+                </div>
+                <canvas id="canvas" width="512px" height="512px"></canvas>
+                <div class="main__canvas-size">
+                        <div class="main__canvas-size__item"></div>
+                        <div class="main__canvas-size__item"></div>
+                        <div class="main__canvas-size__item"></div>
+                        <div class="main__canvas-size__item"></div>
+                        <div class="main__canvas-size__item"></div>
+                        <div class="main__canvas-size__item"></div>
+                </div>
+            </div>
+        </div>    
+    </main>
+    <script src="index.js"></script>
 </body>
 </html>
