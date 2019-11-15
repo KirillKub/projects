@@ -4,44 +4,119 @@ let isPaintBucket = false;
 let isChooseColor = false;
 let color = '#FFC107';
 let colorPrev = '';
+let canvasSize = 512;
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 document.getElementById('swapPrevColor').style.background = '#FFEB3B';
 document.getElementById('inputColor').value = '#FFC107';
+let town = document.getElementById('inputTown').value;
+let isImage = false;
 
-// if (localStorage.getItem('canvas')) {
-//     const dataURL = localStorage.getItem('canvas');
-//     const img = new Image();
-//     img.src = dataURL;
-//     img.onload = function load() {
-//       ctx.drawImage(img, 0, 0);
-//     };
-//   }
-
+if (localStorage.getItem('canvas')) {
+    const dataURL = localStorage.getItem('canvas');
+    const img = new Image();
+    img.src = dataURL;
+    img.onload = function load() {
+      ctx.drawImage(img, 0, 0,canvasSize,canvasSize);
+    };
+  }
 async function searchImage(query){
-    const baseUrl = 'https://api.unsplash.com/photos/';
-    const queryString = `?${query}`;
+    const baseUrl = `https://api.unsplash.com/photos/random?query=town,${town}&`;
+    const queryString = `${query}`;
     const url = baseUrl + queryString;
     try{
         const responce = await fetch(url);
         const data = await responce.json();
-        return data[0].urls.small;
+        return data;
     }
     catch(err){
         console.log(err);
     }
 }
+let image = searchImage('client_id=c7929288a093fb2cbeb5eb0490400814481eab29efe64b15d39c12ee7594d3f9')
 
-document.getElementById('downloadImage').addEventListener('click',function(){
-    let image = searchImage('client_id=27cbaaa385dfdfd21301a5372e2aed7b0b3756e5bd9d222b2dac2ba201b0fe0d')
-    let canvas = document.getElementById('canvas');
-    let ctx = canvas.getContext('2d');
-    let img = new Image();
-    image.then(function(data){
-        img.src = data;
-        img.onload = function(){
-            ctx.drawImage(img,0,0,512,512);
-            }
-            //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    })
+setInterval(townNow,0)
+
+function townNow(){
+  town = document.getElementById('inputTown').value;
+}
+
+document.getElementById('inputTown').addEventListener('focusout', function(){
+  image = searchImage('client_id=c7929288a093fb2cbeb5eb0490400814481eab29efe64b15d39c12ee7594d3f9')
+  document.addEventListener('keydown', keys);
+})
+
+document.getElementById('inputTown').addEventListener('focusin', function(){
+  document.removeEventListener('keydown', keys);
+})
+
+document.getElementById('blackAndWhite').addEventListener('click', function(){
+  if(!isImage){
+    alert('Upload Image')
+  }
+  if(document.getElementById('canvas').style.filter == 'grayscale(1)')
+    document.getElementById('canvas').style.filter = 'grayscale(0)';
+  else document.getElementById('canvas').style.filter = 'grayscale(1)';
+})
+
+async function draw(){
+  isImage = true;
+  let img = new Image();
+  try{
+  let { urls } = await image;
+  img.src = urls.small;
+  img.crossOrigin = "Anonymous";
+  img.onload = function(){
+    if(img.height < 512){
+      canvas.style.height = `${img.height}px`;
+    }
+    if(img.width < 512){
+      canvas.style.width = `${img.width}px`;
+    }
+      ctx.drawImage(img,0,0,canvasSize,canvasSize);
+    }
+   // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  catch(err){
+    console.log(err)
+  }
+  // localStorage.setItem('canvas', canvas.toDataURL());
+}
+
+document.getElementById('downloadImage').addEventListener('click',draw)
+
+document.getElementById('size').addEventListener('click',function(event){
+  let target = event.target;
+  if(target.id === 'size128'){
+    canvasSize = 128;
+    canvas.height = 128;
+    canvas.width = 128;
+    target.classList.add('active');
+    document.getElementById('size256').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
+    if(isImage)
+      draw();
+  }
+  if(target.id === 'size256'){
+    canvasSize = 256;
+    canvas.height = 256;
+    canvas.width = 256;
+    target.classList.add('active');
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
+    if(isImage)
+    draw();
+  }
+  if(target.id === 'size512'){
+    canvasSize = 512;
+    canvas.height = 512;
+    canvas.width = 512;
+    target.classList.add('active');
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size256').classList.remove('active');
+    if(isImage)
+    draw();
+  }
 })
 
 function rgbToHex(str) {
@@ -78,8 +153,6 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
   }
 });
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (isPencil) {
     ctx.beginPath();
@@ -101,12 +174,12 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
 
 document.getElementById('canvas').addEventListener('mouseup', () => {
   isDraw = false;
-  localStorage.setItem('canvas', canvas.toDataURL());
+  //localStorage.setItem('canvas', canvas.toDataURL());
 });
 
 document.getElementById('canvas').addEventListener('mouseleave', () => {
   isDraw = false;
-  localStorage.setItem('canvas', canvas.toDataURL());
+  //localStorage.setItem('canvas', canvas.toDataURL());
 });
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
@@ -114,8 +187,8 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     let x = event.offsetX;
     let y = event.offsetY;
     ctx.fillStyle = color;
-    ctx.fillRect(x, y, 2, 2);
-    localStorage.setItem('canvas', canvas.toDataURL());
+    ctx.fillRect(x, y,1,1);
+    //localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
 
@@ -169,7 +242,9 @@ function colorNow() {
 
 setInterval(colorNow, 0);
 
-document.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', keys);
+
+function keys(event){
   if (event.code === 'KeyB') {
     document.getElementById('paintBucket').classList.add('active');
     isPencil = false;
@@ -203,7 +278,8 @@ document.addEventListener('keydown', (event) => {
     document.getElementById('canvas').classList.remove('choose-color');
     document.getElementById('canvas').classList.remove('paint-bucket');
   }
-});
+}
+
 document.getElementById('canvas').addEventListener('click', (event) => {
   if (isPaintBucket) {
     let x = event.offsetX;
@@ -211,18 +287,6 @@ document.getElementById('canvas').addEventListener('click', (event) => {
     const colorPixel = ctx.getImageData(x, y, 1, 1).data;
     const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     const value = rgbToHex(rgb);
-    for (let i = 1; i <= 4; i += 1) {
-      if (x < 128 * i) {
-        x = 128 * (i - 1);
-        break;
-      }
-    }
-    for (let i = 1; i <= 4; i += 1) {
-      if (y < 128 * i) {
-        y = 128 * (i - 1);
-        break;
-      }
-    }
     const pixels = [];
     const pixelMeet = {};
     pixels.push([x, y]);
@@ -239,22 +303,22 @@ document.getElementById('canvas').addEventListener('click', (event) => {
       const rgb2 = `rgb(${colorPixel2[0]}, ${colorPixel2[1]}, ${colorPixel2[2]})`;
       const value2 = rgbToHex(rgb2);
       if (value2 === value) {
-        ctx.fillRect(xNow, yNow, 128, 128);
-        if (xNow !== 384 && pixelMeet[`${+xNow + +128} ${yNow}`] !== true) {
-          pixels.push([xNow + 128, yNow]);
+        ctx.fillRect(xNow, yNow, 1, 1);
+        if (xNow !== 512 && pixelMeet[`${+xNow + +1} ${yNow}`] !== true) {
+          pixels.push([xNow + 1, yNow]);
         }
-        if (xNow !== 0 && pixelMeet[`${+xNow - +128} ${yNow}`] !== true) {
-          pixels.push([xNow - 128, yNow]);
+        if (xNow !== 0 && pixelMeet[`${+xNow - +1} ${yNow}`] !== true) {
+          pixels.push([xNow - 1, yNow]);
         }
-        if (yNow !== 384 && pixelMeet[`${xNow} ${+yNow + +128}`] !== true) {
-          pixels.push([xNow, yNow + 128]);
+        if (yNow !== 512 && pixelMeet[`${xNow} ${+yNow + +1}`] !== true) {
+          pixels.push([xNow, yNow + 1]);
         }
-        if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow - +128}`] !== true) {
-          pixels.push([xNow, yNow - 128]);
+        if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow - +1}`] !== true) {
+          pixels.push([xNow, yNow - 1]);
         }
       }
     }
-    localStorage.setItem('canvas', canvas.toDataURL());
+    //localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
 

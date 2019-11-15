@@ -37,18 +37,15 @@
                 <div class="main__canvas-buttons">
                     <div>
                         <button id="downloadImage">Load</button>
-                        <input type="text">    
+                        <input id="inputTown" type="text" value="Minsk">    
                     </div>    
-                    <button>B&W</button>
+                    <button id="blackAndWhite">B&W</button>
                 </div>
-                <canvas id="canvas" width="512px" height="512px"></canvas>
-                <div class="main__canvas-size">
-                        <div class="main__canvas-size__item"></div>
-                        <div class="main__canvas-size__item"></div>
-                        <div class="main__canvas-size__item"></div>
-                        <div class="main__canvas-size__item"></div>
-                        <div class="main__canvas-size__item"></div>
-                        <div class="main__canvas-size__item"></div>
+                <div class="canvas-box"><canvas id="canvas" width="512" height="512"></canvas></div>
+                <div class="main__canvas-size" id="size">
+                    <div class="main__canvas-size__item" id="size128">128x128</div>
+                    <div class="main__canvas-size__item" id="size256">256x256</div>
+                    <div class="main__canvas-size__item active" id="size512">512x512</div>
                 </div>
             </div>
         </div>    

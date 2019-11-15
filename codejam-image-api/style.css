@@ -176,6 +176,14 @@ input[type="color"]{
     margin-bottom: 5px;
 }
 
+.main__canvas button:hover{
+    cursor: pointer;
+}
+
+.main__canvas button:focus{
+    outline: 0;
+}
+
 .main__canvas-buttons{
     display: flex;
     justify-content: space-between;
@@ -188,24 +196,29 @@ input[type="color"]{
 }
 
 .main__canvas-size{
-    margin-top: 25px;
     display: flex;
-    width: 513px;
-    height: 3px;
-    justify-content: space-between;
-    background: gray;
+    justify-content: space-around;
+    margin-top: 20px;
+    width: 512px;
 }
 
 .main__canvas-size__item{
-    background: black;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
+    background: lightgreen;
+    padding: 10px;
 }
-
 
 canvas{
     background: lightgrey;
+    width: 512px; 
+    height: 512px;
+}
+
+.canvas-box{
+    display: flex;
+    width: 512px;
+    height: 512px;
+    justify-content: center;
+    align-items: center;
 }
 
 #pencil:hover, #chooseColor:hover, #paintBucket:hover{
@@ -224,4 +237,5 @@ canvas{
 #transform{
     opacity: 0.4;
 }
+
 
