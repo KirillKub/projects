@@ -219,6 +219,7 @@ canvas{
     height: 512px;
     justify-content: center;
     align-items: center;
+    background: lightgrey;
 }
 
 #pencil:hover, #chooseColor:hover, #paintBucket:hover{

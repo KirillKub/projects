@@ -6,6 +6,8 @@ let color = '#FFC107';
 let colorPrev = '';
 let canvasSize = 512;
 const canvas = document.getElementById('canvas');
+canvas.style.width = '512px';
+canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 document.getElementById('swapPrevColor').style.background = '#FFEB3B';
 document.getElementById('inputColor').value = '#FFC107';
@@ -15,6 +17,7 @@ let isImage = false;
 if (localStorage.getItem('canvas')) {
     const dataURL = localStorage.getItem('canvas');
     const img = new Image();
+    img.crossOrigin = "Anonymous";
     img.src = dataURL;
     img.onload = function load() {
       ctx.drawImage(img, 0, 0,canvasSize,canvasSize);
@@ -33,7 +36,7 @@ async function searchImage(query){
         console.log(err);
     }
 }
-let image = searchImage('client_id=c7929288a093fb2cbeb5eb0490400814481eab29efe64b15d39c12ee7594d3f9')
+let image = searchImage('client_id=e6ea6e430230736d392f3de16ae069ec226be325796c2b150258864a74092de4')
 
 setInterval(townNow,0)
 
@@ -42,7 +45,7 @@ function townNow(){
 }
 
 document.getElementById('inputTown').addEventListener('focusout', function(){
-  image = searchImage('client_id=c7929288a093fb2cbeb5eb0490400814481eab29efe64b15d39c12ee7594d3f9')
+  image = searchImage('client_id=e6ea6e430230736d392f3de16ae069ec226be325796c2b150258864a74092de4')
   document.addEventListener('keydown', keys);
 })
 
@@ -59,13 +62,15 @@ document.getElementById('blackAndWhite').addEventListener('click', function(){
   else document.getElementById('canvas').style.filter = 'grayscale(1)';
 })
 
+document.getElementById('downloadImage').addEventListener('click',draw)
+
 async function draw(){
   isImage = true;
   let img = new Image();
+  img.crossOrigin = "Anonymous";
   try{
   let { urls } = await image;
   img.src = urls.small;
-  img.crossOrigin = "Anonymous";
   img.onload = function(){
     if(img.height < 512){
       canvas.style.height = `${img.height}px`;
@@ -75,15 +80,12 @@ async function draw(){
     }
       ctx.drawImage(img,0,0,canvasSize,canvasSize);
     }
-   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
   catch(err){
     console.log(err)
   }
-  // localStorage.setItem('canvas', canvas.toDataURL());
+  localStorage.setItem('canvas', canvas.toDataURL());
 }
-
-document.getElementById('downloadImage').addEventListener('click',draw)
 
 document.getElementById('size').addEventListener('click',function(event){
   let target = event.target;
@@ -152,13 +154,12 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
     document.getElementById('paintBucket').classList.remove('active');
   }
 });
-
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (isPencil) {
     ctx.beginPath();
     const x = event.offsetX;
     const y = event.offsetY;
-    ctx.moveTo(x, y);
+    ctx.moveTo(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize));
     isDraw = true;
   }
 });
@@ -167,19 +168,19 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
   if (isDraw) {
     let x = event.offsetX;
     let y = event.offsetY;
-    ctx.lineTo(x,y)	
+    ctx.lineTo(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize));
     ctx.stroke();
   }
 });
 
 document.getElementById('canvas').addEventListener('mouseup', () => {
   isDraw = false;
-  //localStorage.setItem('canvas', canvas.toDataURL());
+  localStorage.setItem('canvas', canvas.toDataURL());
 });
 
 document.getElementById('canvas').addEventListener('mouseleave', () => {
   isDraw = false;
-  //localStorage.setItem('canvas', canvas.toDataURL());
+  localStorage.setItem('canvas', canvas.toDataURL());
 });
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
@@ -187,8 +188,8 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     let x = event.offsetX;
     let y = event.offsetY;
     ctx.fillStyle = color;
-    ctx.fillRect(x, y,1,1);
-    //localStorage.setItem('canvas', canvas.toDataURL());
+    ctx.fillRect(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize), 1,1);
+    localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
 
@@ -221,7 +222,7 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   if (isChooseColor) {
     const x = event.offsetX;
     const y = event.offsetY;
-    const colorPixel = ctx.getImageData(x, y, 1, 1).data;
+    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize) , 1, 1).data;
     const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     document.getElementById('swapPrevColor').style.background = color;
     color = rgbToHex(rgb);
@@ -318,7 +319,7 @@ document.getElementById('canvas').addEventListener('click', (event) => {
         }
       }
     }
-    //localStorage.setItem('canvas', canvas.toDataURL());
+    localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
 
