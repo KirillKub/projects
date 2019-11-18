@@ -18,25 +18,25 @@ let isImage = false;
 if (localStorage.getItem('canvas')) {
   const dataURL = localStorage.getItem('canvas');
   const img = new Image();
-  img.crossOrigin = "Anonymous";
+  img.crossOrigin = 'Anonymous';
   img.src = dataURL;
   img.onload = function load() {
-    ctx.drawImage(img, 0, 0,512,512);
-    }
+    ctx.drawImage(img, 0, 0, 512, 512);
   };
+}
 
-if(localStorage.getItem('size')){
-  if(localStorage.getItem('size') === '128'){
+if (localStorage.getItem('size')) {
+  if (localStorage.getItem('size') === '128') {
     document.getElementById('size128').classList.add('active');
     document.getElementById('size256').classList.remove('active');
     document.getElementById('size512').classList.remove('active');
   }
-  if(localStorage.getItem('size') === '256'){
+  if (localStorage.getItem('size') === '256') {
     document.getElementById('size256').classList.add('active');
     document.getElementById('size128').classList.remove('active');
     document.getElementById('size512').classList.remove('active');
   }
-  if(localStorage.getItem('size') === '512'){
+  if (localStorage.getItem('size') === '512') {
     document.getElementById('size512').classList.add('active');
     document.getElementById('size128').classList.remove('active');
     document.getElementById('size256').classList.remove('active');
@@ -44,88 +44,122 @@ if(localStorage.getItem('size')){
 }
 
 
-async function searchImage(query){
-    const baseUrl = `https://api.unsplash.com/photos/random?query=town,${town}&`;
-    const queryString = `${query}`;
-    const url = baseUrl + queryString;
-    try{
-        const responce = await fetch(url);
-        const data = await responce.json();
-        return data;
-    }
-    catch(err){
-        console.log(err);
-    }
+async function searchImage(query) {
+  const baseUrl = `https://api.unsplash.com/photos/random?query=town,${town}&`;
+  const queryString = `${query}`;
+  const url = baseUrl + queryString;
+  try {
+    const responce = await fetch(url);
+    const data = await responce.json();
+    return data;
+  } catch (err) {
+    return err;
+  }
 }
-let image = searchImage('client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23')
+let image = searchImage('client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23');
 
-setInterval(townNow,0)
-
-function townNow(){
+function townNow() {
   town = document.getElementById('inputTown').value;
 }
 
-document.getElementById('inputTown').addEventListener('focusout', function(){
-  image = searchImage('client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23')
-  document.addEventListener('keydown', keys);
-})
+setInterval(townNow, 0);
 
-document.getElementById('inputTown').addEventListener('focusin', function(){
-  document.removeEventListener('keydown', keys);
-})
-
-document.getElementById('blackAndWhite').addEventListener('click', function(){
-  if(!isImage){
-    alert('Upload Image')
+function keys(event) {
+  if (event.code === 'KeyB') {
+    document.getElementById('paintBucket').classList.add('active');
+    isPencil = false;
+    isChooseColor = false;
+    isPaintBucket = true;
+    document.getElementById('pencil').classList.remove('active');
+    document.getElementById('chooseColor').classList.remove('active');
+    document.getElementById('canvas').classList.remove('pencil');
+    document.getElementById('canvas').classList.remove('choose-color');
+    document.getElementById('canvas').classList.add('paint-bucket');
   }
-  else{
-    if(document.getElementById('canvas').style.filter == 'grayscale(1)')
-     document.getElementById('canvas').style.filter = 'grayscale(0)';
-    else document.getElementById('canvas').style.filter = 'grayscale(1)';
+  if (event.code === 'KeyC') {
+    document.getElementById('chooseColor').classList.add('active');
+    isPencil = false;
+    isChooseColor = true;
+    isPaintBucket = false;
+    document.getElementById('canvas').classList.add('choose-color');
+    document.getElementById('paintBucket').classList.remove('active');
+    document.getElementById('pencil').classList.remove('active');
+    document.getElementById('canvas').classList.remove('pencil');
+    document.getElementById('canvas').classList.remove('paint-bucket');
   }
-})
+  if (event.code === 'KeyP') {
+    document.getElementById('pencil').classList.add('active');
+    isPencil = true;
+    isChooseColor = false;
+    isPaintBucket = false;
+    document.getElementById('canvas').classList.add('pencil');
+    document.getElementById('paintBucket').classList.remove('active');
+    document.getElementById('chooseColor').classList.remove('active');
+    document.getElementById('canvas').classList.remove('choose-color');
+    document.getElementById('canvas').classList.remove('paint-bucket');
+  }
+}
 
-document.getElementById('downloadImage').addEventListener('click',draw)
-document.getElementById('downloadImage').addEventListener('click',function(){
-    if(canvasSize === 512){
-      document.getElementById('size512').classList.add('active');
-      document.getElementById('size128').classList.remove('active');
-      document.getElementById('size256').classList.remove('active');
-    }
-    if(canvasSize === 128){
-      document.getElementById('size128').classList.add('active');
-      document.getElementById('size256').classList.remove('active');
-      document.getElementById('size512').classList.remove('active');
-    }
-    if(canvasSize === 256){
-      document.getElementById('size256').classList.add('active');
-      document.getElementById('size128').classList.remove('active');
-      document.getElementById('size512').classList.remove('active');
-    }
-})
-
-async function draw(){
+async function draw() {
   isImage = true;
-  let img = new Image();
-  img.crossOrigin = "Anonymous";
-  try{
-  let { urls } = await image;
-  img.src = urls.small;
-  img.onload = function(){
-      ctx.drawImage(img,((512 - img.width) / 2) / (512 / canvasSize) ,((512 - img.height) / 2) / (512 / canvasSize),
-      img.width / (512 / canvasSize), img.height / (512 / canvasSize));
-    }
-  }
-  catch(err){
-    console.log(err)
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  try {
+    const { urls } = await image;
+    img.src = urls.small;
+    img.onload = function paint() {
+      ctx.drawImage(img, ((512 - img.width) / 2) / (512 / canvasSize),
+        ((512 - img.height) / 2) / (512 / canvasSize),
+        img.width / (512 / canvasSize), img.height / (512 / canvasSize));
+    };
+  } catch (err) {
+    return err;
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   localStorage.setItem('canvas', canvas.toDataURL());
 }
 
-document.getElementById('size').addEventListener('click',function(event){
-  let target = event.target;
-  if(target.id === 'size128'){
+document.getElementById('inputTown').addEventListener('focusout', () => {
+  image = searchImage('client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23');
+  document.addEventListener('keydown', keys);
+});
+
+document.getElementById('inputTown').addEventListener('focusin', () => {
+  document.removeEventListener('keydown', keys);
+});
+
+document.getElementById('blackAndWhite').addEventListener('click', () => {
+  if (!isImage) {
+    /*eslint-disable */
+    alert('Upload Image');
+    /* eslint-enable */
+  } else if (document.getElementById('canvas').style.filter === 'grayscale(1)') {
+    document.getElementById('canvas').style.filter = 'grayscale(0)';
+  } else document.getElementById('canvas').style.filter = 'grayscale(1)';
+});
+
+document.getElementById('downloadImage').addEventListener('click', draw);
+document.getElementById('downloadImage').addEventListener('click', () => {
+  if (canvasSize === 512) {
+    document.getElementById('size512').classList.add('active');
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size256').classList.remove('active');
+  }
+  if (canvasSize === 128) {
+    document.getElementById('size128').classList.add('active');
+    document.getElementById('size256').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
+  }
+  if (canvasSize === 256) {
+    document.getElementById('size256').classList.add('active');
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
+  }
+});
+
+document.getElementById('size').addEventListener('click', (event) => {
+  const { target } = event;
+  if (target.id === 'size128') {
     canvasSize = 128;
     canvas.height = 128;
     canvas.width = 128;
@@ -133,16 +167,16 @@ document.getElementById('size').addEventListener('click',function(event){
     document.getElementById('size256').classList.remove('active');
     document.getElementById('size512').classList.remove('active');
     localStorage.setItem('size', canvasSize);
-        let dataURL = localStorage.getItem('canvas');
-        let img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = dataURL;
-        img.onload = function load() {
-          ctx.drawImage(img,0,0, 
-          512 / (512 / canvasSize), 512 / (512 / canvasSize));
-    }
+    const dataURL = localStorage.getItem('canvas');
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = dataURL;
+    img.onload = function load() {
+      ctx.drawImage(img, 0, 0,
+        512 / (512 / canvasSize), 512 / (512 / canvasSize));
+    };
   }
-  if(target.id === 'size256'){
+  if (target.id === 'size256') {
     canvasSize = 256;
     canvas.height = 256;
     canvas.width = 256;
@@ -150,16 +184,16 @@ document.getElementById('size').addEventListener('click',function(event){
     document.getElementById('size128').classList.remove('active');
     document.getElementById('size512').classList.remove('active');
     localStorage.setItem('size', canvasSize);
-        let dataURL = localStorage.getItem('canvas');
-        let img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = dataURL;
-        img.onload = function load() {
-          ctx.drawImage(img,0 ,0, 
-          512 / (512 / canvasSize), 512 / (512 / canvasSize));
-    }
+    const dataURL = localStorage.getItem('canvas');
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = dataURL;
+    img.onload = function load() {
+      ctx.drawImage(img, 0, 0,
+        512 / (512 / canvasSize), 512 / (512 / canvasSize));
+    };
   }
-  if(target.id === 'size512'){
+  if (target.id === 'size512') {
     canvasSize = 512;
     canvas.height = 512;
     canvas.width = 512;
@@ -167,16 +201,16 @@ document.getElementById('size').addEventListener('click',function(event){
     document.getElementById('size128').classList.remove('active');
     document.getElementById('size256').classList.remove('active');
     localStorage.setItem('size', canvasSize);
-        let dataURL = localStorage.getItem('canvas');
-        let img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = dataURL;
-        img.onload = function load() {
-          ctx.drawImage(img,0,0, 
-          512 / (512 / canvasSize), 512 / (512 / canvasSize));
-    }
+    const dataURL = localStorage.getItem('canvas');
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = dataURL;
+    img.onload = function load() {
+      ctx.drawImage(img, 0, 0,
+        512 / (512 / canvasSize), 512 / (512 / canvasSize));
+    };
   }
-})
+});
 
 function rgbToHex(str) {
   let rgbElements = str.slice(4, str.length - 1);
@@ -216,16 +250,18 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     ctx.beginPath();
     const x = event.offsetX;
     const y = event.offsetY;
-    ctx.moveTo(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize));
+    ctx.moveTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
+      y / (parseInt(canvas.style.height, 10) / canvasSize));
     isDraw = true;
   }
 });
 
 document.getElementById('canvas').addEventListener('mousemove', (event) => {
   if (isDraw) {
-    let x = event.offsetX;
-    let y = event.offsetY;
-    ctx.lineTo(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize));
+    const x = event.offsetX;
+    const y = event.offsetY;
+    ctx.lineTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
+      y / (parseInt(canvas.style.height, 10) / canvasSize));
     ctx.stroke();
   }
 });
@@ -242,10 +278,10 @@ document.getElementById('canvas').addEventListener('mouseleave', () => {
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (isPencil) {
-    let x = event.offsetX;
-    let y = event.offsetY;
+    const x = event.offsetX;
+    const y = event.offsetY;
     ctx.fillStyle = color;
-    ctx.fillRect(x / (512 / canvasSize) , y / (512 / canvasSize), 1,1);
+    ctx.fillRect(x / (512 / canvasSize), y / (512 / canvasSize), 1, 1);
     localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
@@ -279,7 +315,8 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   if (isChooseColor) {
     const x = event.offsetX;
     const y = event.offsetY;
-    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize) , 1, 1).data;
+    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width, 10) / canvasSize),
+      y / (parseInt(canvas.style.height, 10) / canvasSize), 1, 1).data;
     const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     document.getElementById('swapPrevColor').style.background = color;
     color = rgbToHex(rgb);
@@ -302,47 +339,12 @@ setInterval(colorNow, 0);
 
 document.addEventListener('keydown', keys);
 
-function keys(event){
-  if (event.code === 'KeyB') {
-    document.getElementById('paintBucket').classList.add('active');
-    isPencil = false;
-    isChooseColor = false;
-    isPaintBucket = true;
-    document.getElementById('pencil').classList.remove('active');
-    document.getElementById('chooseColor').classList.remove('active');
-    document.getElementById('canvas').classList.remove('pencil');
-    document.getElementById('canvas').classList.remove('choose-color');
-    document.getElementById('canvas').classList.add('paint-bucket');
-  }
-  if (event.code === 'KeyC') {
-    document.getElementById('chooseColor').classList.add('active');
-    isPencil = false;
-    isChooseColor = true;
-    isPaintBucket = false;
-    document.getElementById('canvas').classList.add('choose-color');
-    document.getElementById('paintBucket').classList.remove('active');
-    document.getElementById('pencil').classList.remove('active');
-    document.getElementById('canvas').classList.remove('pencil');
-    document.getElementById('canvas').classList.remove('paint-bucket');
-  }
-  if (event.code === 'KeyP') {
-    document.getElementById('pencil').classList.add('active');
-    isPencil = true;
-    isChooseColor = false;
-    isPaintBucket = false;
-    document.getElementById('canvas').classList.add('pencil');
-    document.getElementById('paintBucket').classList.remove('active');
-    document.getElementById('chooseColor').classList.remove('active');
-    document.getElementById('canvas').classList.remove('choose-color');
-    document.getElementById('canvas').classList.remove('paint-bucket');
-  }
-}
-
 document.getElementById('canvas').addEventListener('click', (event) => {
   if (isPaintBucket) {
-    let x = event.offsetX;
-    let y = event.offsetY;
-    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize) , 1, 1).data;
+    const x = event.offsetX;
+    const y = event.offsetY;
+    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width, 10) / canvasSize),
+      y / (parseInt(canvas.style.height, 10) / canvasSize), 1, 1).data;
     const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     const value = rgbToHex(rgb);
     const pixels = [];
@@ -361,7 +363,8 @@ document.getElementById('canvas').addEventListener('click', (event) => {
       const rgb2 = `rgb(${colorPixel2[0]}, ${colorPixel2[1]}, ${colorPixel2[2]})`;
       const value2 = rgbToHex(rgb2);
       if (value2 === value) {
-        ctx.fillRect(xNow / (parseInt(canvas.style.width) / canvasSize), yNow / (parseInt(canvas.style.height) / canvasSize), 1, 1);
+        ctx.fillRect(xNow / (parseInt(canvas.style.width, 10) / canvasSize),
+          yNow / (parseInt(canvas.style.height, 10) / canvasSize), 1, 1);
         if (xNow !== 512 && pixelMeet[`${+xNow + +1} ${yNow}`] !== true) {
           pixels.push([xNow + 1, yNow]);
         }
@@ -397,4 +400,3 @@ document.getElementById('canvas').addEventListener('mouseleave', () => {
   document.getElementById('canvas').classList.remove('choose-color');
   document.getElementById('canvas').classList.remove('paint-bucket');
 });
-
