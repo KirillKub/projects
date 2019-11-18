@@ -9,20 +9,41 @@ const canvas = document.getElementById('canvas');
 canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
 document.getElementById('swapPrevColor').style.background = '#FFEB3B';
 document.getElementById('inputColor').value = '#FFC107';
 let town = document.getElementById('inputTown').value;
 let isImage = false;
 
 if (localStorage.getItem('canvas')) {
-    const dataURL = localStorage.getItem('canvas');
-    const img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.src = dataURL;
-    img.onload = function load() {
-      ctx.drawImage(img, 0, 0,canvasSize,canvasSize);
-    };
+  const dataURL = localStorage.getItem('canvas');
+  const img = new Image();
+  img.crossOrigin = "Anonymous";
+  img.src = dataURL;
+  img.onload = function load() {
+    ctx.drawImage(img, 0, 0,512,512);
+    }
+  };
+
+if(localStorage.getItem('size')){
+  if(localStorage.getItem('size') === '128'){
+    document.getElementById('size128').classList.add('active');
+    document.getElementById('size256').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
   }
+  if(localStorage.getItem('size') === '256'){
+    document.getElementById('size256').classList.add('active');
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
+  }
+  if(localStorage.getItem('size') === '512'){
+    document.getElementById('size512').classList.add('active');
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size256').classList.remove('active');
+  }
+}
+
+
 async function searchImage(query){
     const baseUrl = `https://api.unsplash.com/photos/random?query=town,${town}&`;
     const queryString = `${query}`;
@@ -36,7 +57,7 @@ async function searchImage(query){
         console.log(err);
     }
 }
-let image = searchImage('client_id=e6ea6e430230736d392f3de16ae069ec226be325796c2b150258864a74092de4')
+let image = searchImage('client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23')
 
 setInterval(townNow,0)
 
@@ -45,7 +66,7 @@ function townNow(){
 }
 
 document.getElementById('inputTown').addEventListener('focusout', function(){
-  image = searchImage('client_id=e6ea6e430230736d392f3de16ae069ec226be325796c2b150258864a74092de4')
+  image = searchImage('client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23')
   document.addEventListener('keydown', keys);
 })
 
@@ -57,12 +78,31 @@ document.getElementById('blackAndWhite').addEventListener('click', function(){
   if(!isImage){
     alert('Upload Image')
   }
-  if(document.getElementById('canvas').style.filter == 'grayscale(1)')
-    document.getElementById('canvas').style.filter = 'grayscale(0)';
-  else document.getElementById('canvas').style.filter = 'grayscale(1)';
+  else{
+    if(document.getElementById('canvas').style.filter == 'grayscale(1)')
+     document.getElementById('canvas').style.filter = 'grayscale(0)';
+    else document.getElementById('canvas').style.filter = 'grayscale(1)';
+  }
 })
 
 document.getElementById('downloadImage').addEventListener('click',draw)
+document.getElementById('downloadImage').addEventListener('click',function(){
+    if(canvasSize === 512){
+      document.getElementById('size512').classList.add('active');
+      document.getElementById('size128').classList.remove('active');
+      document.getElementById('size256').classList.remove('active');
+    }
+    if(canvasSize === 128){
+      document.getElementById('size128').classList.add('active');
+      document.getElementById('size256').classList.remove('active');
+      document.getElementById('size512').classList.remove('active');
+    }
+    if(canvasSize === 256){
+      document.getElementById('size256').classList.add('active');
+      document.getElementById('size128').classList.remove('active');
+      document.getElementById('size512').classList.remove('active');
+    }
+})
 
 async function draw(){
   isImage = true;
@@ -72,18 +112,14 @@ async function draw(){
   let { urls } = await image;
   img.src = urls.small;
   img.onload = function(){
-    if(img.height < 512){
-      canvas.style.height = `${img.height}px`;
-    }
-    if(img.width < 512){
-      canvas.style.width = `${img.width}px`;
-    }
-      ctx.drawImage(img,0,0,canvasSize,canvasSize);
+      ctx.drawImage(img,((512 - img.width) / 2) / (512 / canvasSize) ,((512 - img.height) / 2) / (512 / canvasSize),
+      img.width / (512 / canvasSize), img.height / (512 / canvasSize));
     }
   }
   catch(err){
     console.log(err)
   }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   localStorage.setItem('canvas', canvas.toDataURL());
 }
 
@@ -96,8 +132,15 @@ document.getElementById('size').addEventListener('click',function(event){
     target.classList.add('active');
     document.getElementById('size256').classList.remove('active');
     document.getElementById('size512').classList.remove('active');
-    if(isImage)
-      draw();
+    localStorage.setItem('size', canvasSize);
+        let dataURL = localStorage.getItem('canvas');
+        let img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = dataURL;
+        img.onload = function load() {
+          ctx.drawImage(img,0,0, 
+          512 / (512 / canvasSize), 512 / (512 / canvasSize));
+    }
   }
   if(target.id === 'size256'){
     canvasSize = 256;
@@ -106,8 +149,15 @@ document.getElementById('size').addEventListener('click',function(event){
     target.classList.add('active');
     document.getElementById('size128').classList.remove('active');
     document.getElementById('size512').classList.remove('active');
-    if(isImage)
-    draw();
+    localStorage.setItem('size', canvasSize);
+        let dataURL = localStorage.getItem('canvas');
+        let img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = dataURL;
+        img.onload = function load() {
+          ctx.drawImage(img,0 ,0, 
+          512 / (512 / canvasSize), 512 / (512 / canvasSize));
+    }
   }
   if(target.id === 'size512'){
     canvasSize = 512;
@@ -116,8 +166,15 @@ document.getElementById('size').addEventListener('click',function(event){
     target.classList.add('active');
     document.getElementById('size128').classList.remove('active');
     document.getElementById('size256').classList.remove('active');
-    if(isImage)
-    draw();
+    localStorage.setItem('size', canvasSize);
+        let dataURL = localStorage.getItem('canvas');
+        let img = new Image();
+        img.crossOrigin = "Anonymous";
+        img.src = dataURL;
+        img.onload = function load() {
+          ctx.drawImage(img,0,0, 
+          512 / (512 / canvasSize), 512 / (512 / canvasSize));
+    }
   }
 })
 
@@ -188,7 +245,7 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     let x = event.offsetX;
     let y = event.offsetY;
     ctx.fillStyle = color;
-    ctx.fillRect(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize), 1,1);
+    ctx.fillRect(x / (512 / canvasSize) , y / (512 / canvasSize), 1,1);
     localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
@@ -285,7 +342,7 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   if (isPaintBucket) {
     let x = event.offsetX;
     let y = event.offsetY;
-    const colorPixel = ctx.getImageData(x, y, 1, 1).data;
+    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width) / canvasSize) , y / (parseInt(canvas.style.height) / canvasSize) , 1, 1).data;
     const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     const value = rgbToHex(rgb);
     const pixels = [];
@@ -304,7 +361,7 @@ document.getElementById('canvas').addEventListener('click', (event) => {
       const rgb2 = `rgb(${colorPixel2[0]}, ${colorPixel2[1]}, ${colorPixel2[2]})`;
       const value2 = rgbToHex(rgb2);
       if (value2 === value) {
-        ctx.fillRect(xNow, yNow, 1, 1);
+        ctx.fillRect(xNow / (parseInt(canvas.style.width) / canvasSize), yNow / (parseInt(canvas.style.height) / canvasSize), 1, 1);
         if (xNow !== 512 && pixelMeet[`${+xNow + +1} ${yNow}`] !== true) {
           pixels.push([xNow + 1, yNow]);
         }
