@@ -1,7 +1,4 @@
-let main = document.createElement('main');
-main.classList.add('main');
-document.body.append(main);
-
+import requestItem from './request';
 const BODY = ['main__section1','main__wrapper']
 const MAIN_SECTION1 = ['main__section1__box','main__section1__search']
 const MAIN_SECTION1_BOX = ['main__section1__switch-photo','main__section1__switch-lang','main__section1__switch-temperature']
@@ -14,26 +11,45 @@ const MAIN_SECTION2__TEMPERATURE_DESCRIPTION = ['main__section2__element','main_
 const MAIN_SECTION3 = ['main__section3__weather','main__section3__weather','main__section3__weather']
 const MAIN_SECTION3_WEATHER = ['main__section3__weather-day','main__section3__weather-temperature']
 
-create(BODY,'main');
-create(MAIN_SECTION1,'main__section1');
-create(MAIN_SECTION1_BOX,'main__section1__box');
-create(MAIN_SECTION1_SWITCH_TEMPERATURE,'main__section1__switch-temperature');
-create(MAIN_SECTION1_SEARCH,'main__section1__search');
-createSearch();
-create(MAIN_WRAPPER,'main__wrapper');
-create(MAIN_BOX,'main__box');
-create(MAIN_SECTION2,'main__section2');
-createTemperature();
-create(MAIN_SECTION2__TEMPERATURE_DESCRIPTION,'main__section2__temperature-description')
-create(MAIN_SECTION3,'main__section3');
-create(MAIN_SECTION3_WEATHER,'main__section3__weather');
-createWeather();
-createMap();
-addImg();
-addTemperature();
-switchLang();
-addInfo();
-document.getElementsByClassName('main__section1__search-input')[0].placeholder = 'Search city or ZIP';
+export default function createPage(){
+    let main = document.createElement('main');
+    main.classList.add('main');
+    document.body.append(main);
+    create(BODY,'main');
+    create(MAIN_SECTION1,'main__section1');
+    create(MAIN_SECTION1_BOX,'main__section1__box');
+    create(MAIN_SECTION1_SWITCH_TEMPERATURE,'main__section1__switch-temperature');
+    create(MAIN_SECTION1_SEARCH,'main__section1__search');
+    createSearch();
+    create(MAIN_WRAPPER,'main__wrapper');
+    create(MAIN_BOX,'main__box');
+    create(MAIN_SECTION2,'main__section2');
+    createTemperature();
+    create(MAIN_SECTION2__TEMPERATURE_DESCRIPTION,'main__section2__temperature-description')
+    create(MAIN_SECTION3,'main__section3');
+    create(MAIN_SECTION3_WEATHER,'main__section3__weather');
+    createWeather();
+    createMap();
+    addImg();
+    addTemperature();
+    switchLang();
+    addInfo();
+    document.getElementsByClassName('main__section1__search-input')[0].placeholder = 'Search city or ZIP';
+    addLoc();
+}
+let test = requestItem('https://ipinfo.io/json?token=fa763d842192af');
+
+async function addLoc(){
+    try{
+        const { loc } = await test;
+        const [latitude,longitude ] = loc.split(',');
+        document.getElementsByClassName('main__section4-text')[0].innerHTML = `Latitude: ${latitude}`;
+        document.getElementsByClassName('main__section4-text')[1].innerHTML = `Longitude: ${longitude}`;
+        }
+    catch(err){
+        return err;
+    }
+}
 
 function createSearch(){
     let input = document.createElement('input');
@@ -101,9 +117,6 @@ function createMap(){
     divSecond.classList.add('main__section4-text');
     img.src = '../dist/assets/images/google.png'
     img.classList.add('main__section4-map');
-
-    divFirst.innerHTML = 'Latitude';
-    divSecond.innerHTML = 'Longitude';
 
     document.getElementsByClassName('main__section4')[0].append(img);
     document.getElementsByClassName('main__section4')[0].append(divFirst);
