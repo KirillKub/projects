@@ -1,0 +1,24 @@
+{
+  "name": "kirillkub-rs2019q3",
+  "version": "1.0.0",
+  "description": "Private repository for @kirillkub",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolling-scopes-school/kirillkub-RS2019Q3.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rolling-scopes-school/kirillkub-RS2019Q3/issues"
+  },
+  "homepage": "https://github.com/rolling-scopes-school/kirillkub-RS2019Q3#readme",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}
