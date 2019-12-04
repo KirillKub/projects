@@ -89,23 +89,23 @@ function createButton(){
     document.getElementsByClassName(`main__section1__search`)[0].append(button);
 }
 
-function timeNow(){
-    let date = new Date();
-    let minute = date.getMinutes().toLocaleString();
-    if(minute.length < 2){
-        minute = '0' + date.getMinutes().toLocaleString();
+async function timeNow(){
+    let [ city,country,timezone ] = await getTown()   
+    let date = new Date().toLocaleString(0,{timeZone: `${timezone}`})
+    date = new Date(Date.parse(date));
+    let minute = date.getMinutes();
+    if(minute < 10){
+        minute = '0' + date.getMinutes();
     }
     document.getElementsByClassName('main__section2__day')[0].innerHTML = 
-    `${DAY[date.getDay()]} ${date.getDate()} ${MONTH[date.getMonth()]}, ${date.getHours().toLocaleString()}:${minute}`;
+    `${DAY[date.getDay()]} ${date.getDate()} ${MONTH[date.getMonth()]}, ${date.getHours()}:${minute}`;
 }
 
 async function weatherOnWeek(){
     let countDay = 7;
-    let offset = new Date().getTimezoneOffset();
-    let date =  + (offset * 60000);
-    date = new Date(date);
-    let test =new Date()
-    console.log();
+    let [ city,country,timezone ] = await getTown()   
+    let date = new Date().toLocaleString(0,{timeZone: `${timezone}`})
+    date = new Date(Date.parse(date));
     document.getElementsByClassName('main__section3__weather-day')[0].innerHTML = `${DAY_FULL[(+date.getDay() + 1) % countDay]}`;
     document.getElementsByClassName('main__section3__weather-day')[1].innerHTML = `${DAY_FULL[(+date.getDay() + 2) % countDay]}`;
     document.getElementsByClassName('main__section3__weather-day')[2].innerHTML = `${DAY_FULL[(+date.getDay() + 3) % countDay]}`;
@@ -114,9 +114,9 @@ async function weatherOnWeek(){
 async function getTown(){
     let location = requestItem('https://ipinfo.io/json?token=fa763d842192af');
     try{
-        const { city,country } = await location;
+        const { city,country,timezone } = await location;
         document.getElementsByClassName('main__section2__town')[0].innerHTML = `${city}, ${COUNTRY[country]}`;
-        return [city,country];
+        return [city,country,timezone];
         }
     catch(err){
         return err;
@@ -157,7 +157,7 @@ async function createTemperature(){
         return err;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -172,15 +172,10 @@ async function createTemperature(){
 async function createWeather(){    
     let town;
     let countryName;
-    try{
-        let [city, country] = await getTown();
-        town = city;
-        countryName = country;
-    }
-    catch(err){
-        return err;
-    }
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e&days=4`);
+    let [city, country] = await getTown();
+    town = city;
+    countryName = country;
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042&days=4`);
     for(let i = 0; i < 3; i++){
         let img = document.createElement('img');
         let span = document.createElement('span');
@@ -285,15 +280,10 @@ function switchLang(){
 async function addInfo(){
     let town;
     let countryName;
-    try{
-        let [city, country] = await getTown();
-        town = city;
-        countryName = country
-    }
-    catch(err){
-        return err;
-    }
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e`);
+    let [city, country] = await getTown();
+    town = city;
+    countryName = country
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -309,27 +299,21 @@ async function addInfo(){
 
 async function backgroundImg(){
     const SEASON = ['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'];
-    let offset = new Date().getTimezoneOffset();
     let time;
-    let date = Date.now() + offset * 60;
     let weather;
     let town;
     let countryName;
+    let [ city,country,timezone ] = await getTown() 
+    let date = new Date().toLocaleString(0,{timeZone: `${timezone}`})
+    date = new Date(Date.parse(date));
+    town = city;
+    countryName = country;
     date = new Date(date);
-    console.log(date)
     if(date.getHours() > 6 && date.getHours() < 18)
         time = 'day'
     else time = 'night';
     try{
-        let [city,country] = await getTown();
-        town = city;
-        countryName = country;
-        }
-    catch(err){
-        return err;
-    }
-    try{
-        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e`);
+        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042`);
         let weatherNow = await reqWeather;
         weatherNow = weatherNow.data[0]
         weather = weatherNow.weather.description;
@@ -340,7 +324,7 @@ async function backgroundImg(){
     try{
     let req = requestItem(`https://api.unsplash.com/photos/random?query=${SEASON[date.getMonth()]},${time},${weather}&client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23`)
     let { urls } = await req;
-    document.getElementsByClassName('main')[0].style.backgroundImage = `url(${urls.small})`;
+    document.getElementsByClassName('main')[0].style.background = `url(${urls.small}) center center / cover no-repeat`;
         }
     catch(err){
         return err;
