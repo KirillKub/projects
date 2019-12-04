@@ -6,7 +6,7 @@ body{
 .main{
     width: 100%;
     height: 100%;
-    background:url('assets/images/bg.png');
+    background-image:url('assets/images/bg.png');
     background-size:100% 100%;
 }
 
@@ -44,7 +44,7 @@ body{
     cursor: pointer;
 }
 
-.switch-temperature-item{
+.switch-temperature-item-C, .switch-temperature-item-F{
     border-radius: 5px;
     background: rgba(76, 82, 85, 0.4);
     height: 44px;

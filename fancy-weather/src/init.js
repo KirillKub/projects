@@ -1,9 +1,10 @@
 import requestItem from './request';
+import { COUNTRY } from './country'
 
 const BODY = ['main__section1','main__wrapper']
 const MAIN_SECTION1 = ['main__section1__box','main__section1__search']
 const MAIN_SECTION1_BOX = ['main__section1__switch-photo','main__section1__switch-lang','main__section1__switch-temperature']
-const MAIN_SECTION1_SWITCH_TEMPERATURE = ['switch-temperature-item','switch-temperature-item'];
+const MAIN_SECTION1_SWITCH_TEMPERATURE = ['switch-temperature-item-C','switch-temperature-item-F'];
 const MAIN_SECTION1_SEARCH = ['main__section1__search-flex'];
 const MAIN_WRAPPER = ['main__box','main__section4'];
 const MAIN_BOX = ['main__section2','main__section3'];
@@ -16,9 +17,10 @@ const DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
 const DAY_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 const MONTH = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-let town;
+let lat;
+let long;
 
-export default function createPage(){
+function createPage(){
     let main = document.createElement('main');
     main.classList.add('main');
     document.body.append(main);
@@ -43,10 +45,11 @@ export default function createPage(){
     addTemperature();
     switchLang();
     addInfo();
-    document.getElementsByClassName('main__section1__search-input')[0].placeholder = 'Search city or ZIP';
+    document.getElementsByClassName('main__section1__search-input')[0].placeholder = 'Search city';
     addLoc();
     timeNow();
     weatherOnWeek();
+    backgroundImg();
 }
 
 async function addLoc(){
@@ -54,8 +57,11 @@ async function addLoc(){
     try{
         const { loc } = await location;
         const [latitude,longitude ] = loc.split(',');
+        lat = latitude;
+        long = longitude;
         document.getElementsByClassName('main__section4-text')[0].innerHTML = `Latitude: ${latitude}`;
         document.getElementsByClassName('main__section4-text')[1].innerHTML = `Longitude: ${longitude}`;
+        return [].push(lat,long);
         }
     catch(err){
         return err;
@@ -94,19 +100,23 @@ function timeNow(){
 }
 
 async function weatherOnWeek(){
-    let date = new Date()
     let countDay = 7;
-    document.getElementsByClassName('main__section3__weather-day')[0].innerHTML = `${DAY_FULL[(+date.getDay().toLocaleString() + 1) % countDay]}`;
-    document.getElementsByClassName('main__section3__weather-day')[1].innerHTML = `${DAY_FULL[(+date.getDay().toLocaleString() + 2) % countDay]}`;
-    document.getElementsByClassName('main__section3__weather-day')[2].innerHTML = `${DAY_FULL[(+date.getDay().toLocaleString() + 3) % countDay]}`;
+    let offset = new Date().getTimezoneOffset();
+    let date =  + (offset * 60000);
+    date = new Date(date);
+    let test =new Date()
+    console.log();
+    document.getElementsByClassName('main__section3__weather-day')[0].innerHTML = `${DAY_FULL[(+date.getDay() + 1) % countDay]}`;
+    document.getElementsByClassName('main__section3__weather-day')[1].innerHTML = `${DAY_FULL[(+date.getDay() + 2) % countDay]}`;
+    document.getElementsByClassName('main__section3__weather-day')[2].innerHTML = `${DAY_FULL[(+date.getDay() + 3) % countDay]}`;
 }
 
 async function getTown(){
     let location = requestItem('https://ipinfo.io/json?token=fa763d842192af');
     try{
         const { city,country } = await location;
-        document.getElementsByClassName('main__section2__town')[0].innerHTML = `${city}, ${country}`;
-        return city;
+        document.getElementsByClassName('main__section2__town')[0].innerHTML = `${city}, ${COUNTRY[country]}`;
+        return [city,country];
         }
     catch(err){
         return err;
@@ -137,14 +147,17 @@ async function createTemperature(){
     document.getElementsByClassName('main__section2__temperature')[0].append(divSecond)
 
     let town;
+    let countryName;
     try{
-    town = await getTown();
+    let [city, country] = await getTown();
+    town = city;
+    countryName = country;
     }
     catch(err){
         return err;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=ee871320653643dfb606e06d1fc619f5`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -156,34 +169,25 @@ async function createTemperature(){
     }
 }
 
-// function createWeather(){
-//     for(let i = 0; i < 3 ; i++){
-//     let img = document.createElement('img');
-//     let span = document.createElement('span');
-//     img.classList.add('main__section3__weather-img');
-//     document.getElementsByClassName('main__section3__weather-temperature')[i].append(span);
-//     document.getElementsByClassName('main__section3__weather-temperature')[i].append(img);
-//     }
-// }
-
-async function createWeather(){
-    
+async function createWeather(){    
     let town;
+    let countryName;
     try{
-    town = await getTown();
+        let [city, country] = await getTown();
+        town = city;
+        countryName = country;
     }
     catch(err){
         return err;
     }
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=ee871320653643dfb606e06d1fc619f5&days=3`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e&days=4`);
     for(let i = 0; i < 3; i++){
         let img = document.createElement('img');
         let span = document.createElement('span');
         img.classList.add('main__section3__weather-img');
         try{
             let weatherNow = await req;
-            weatherNow = weatherNow.data[i];
-            console.log(weatherNow)
+            weatherNow = weatherNow.data[i + 1];
             span.innerHTML = Math.round(weatherNow.temp) + '°';
             img.src = `../dist/assets/images/weather/${weatherNow.weather.icon}.png`;
             img.style.width = '68px'
@@ -197,7 +201,7 @@ async function createWeather(){
 }
 
 
-function createMap(){
+async function createMap(){
     let divMap = document.createElement('div');
     let divFirst = document.createElement('div');
     let divSecond = document.createElement('div')
@@ -212,13 +216,32 @@ function createMap(){
 
     document.getElementById('map').style.width = '400px';
     document.getElementById('map').style.height = '375px';
+
+    await addLoc();
+
     mapboxgl.accessToken = 'pk.eyJ1Ijoia2lyaWxsa3ViIiwiYSI6ImNrM2tqd2IyZTAzdDEza240OHE0NGZvMWwifQ.u4ePMf5LJIEOrcLdPByj2g';
-    var map = new mapboxgl.Map({
-        container: 'map', // container id
-        style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-        center: [27.5667, 53.9000], // starting position [lng, lat]
-        zoom: 1 // starting zoom
+    var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
+    mapboxClient.geocoding.forwardGeocode({
+        query: 'Wellington, New Zealand',
+        autocomplete: false,
+        limit: 1
     })
+    .send()
+    .then(function (response) {
+        if (response && response.body && response.body.features && response.body.features.length) {
+        var feature = response.body.features[0];
+        feature.center = [long,lat] //longitude,latitude
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: feature.center,
+            zoom: 10
+        });
+        new mapboxgl.Marker()
+        .setLngLat(feature.center)
+        .addTo(map);
+        }
+    });
 }
 
 function create(mas,className){
@@ -247,9 +270,9 @@ function addImg(){
 }
 
 function addTemperature(){
-    document.getElementsByClassName('switch-temperature-item')[0].innerHTML = '°F';
-    document.getElementsByClassName('switch-temperature-item')[1].innerHTML = '°C';
-    document.getElementsByClassName('switch-temperature-item')[1].classList.add('active');
+    document.getElementsByClassName('switch-temperature-item-F')[0].innerHTML = '°F';
+    document.getElementsByClassName('switch-temperature-item-C')[0].innerHTML = '°C';
+    document.getElementsByClassName('switch-temperature-item-C')[0].classList.add('active');
 }
 
 function switchLang(){
@@ -260,14 +283,17 @@ function switchLang(){
 }
 
 async function addInfo(){
-    let town
+    let town;
+    let countryName;
     try{
-    town = await getTown();
+        let [city, country] = await getTown();
+        town = city;
+        countryName = country
     }
     catch(err){
         return err;
     }
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=ee871320653643dfb606e06d1fc619f5`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -280,3 +306,45 @@ async function addInfo(){
         return err;
     }
 }
+
+async function backgroundImg(){
+    const SEASON = ['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'];
+    let offset = new Date().getTimezoneOffset();
+    let time;
+    let date = Date.now() + offset * 60;
+    let weather;
+    let town;
+    let countryName;
+    date = new Date(date);
+    console.log(date)
+    if(date.getHours() > 6 && date.getHours() < 18)
+        time = 'day'
+    else time = 'night';
+    try{
+        let [city,country] = await getTown();
+        town = city;
+        countryName = country;
+        }
+    catch(err){
+        return err;
+    }
+    try{
+        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=e5207f4c184148099e553f8f485fb73e`);
+        let weatherNow = await reqWeather;
+        weatherNow = weatherNow.data[0]
+        weather = weatherNow.weather.description;
+    }
+    catch(err){
+        return err;
+    }
+    try{
+    let req = requestItem(`https://api.unsplash.com/photos/random?query=${SEASON[date.getMonth()]},${time},${weather}&client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23`)
+    let { urls } = await req;
+    document.getElementsByClassName('main')[0].style.backgroundImage = `url(${urls.small})`;
+        }
+    catch(err){
+        return err;
+    }
+}
+
+export { createPage,backgroundImg,getTown,timeNow }
