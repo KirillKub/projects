@@ -49,7 +49,7 @@ function createPage(){
     addLoc();
     timeNow();
     weatherOnWeek();
-    backgroundImg();
+    setTimeout(backgroundImg,1000);
 }
 
 async function addLoc(){
@@ -91,8 +91,8 @@ function createButton(){
 
 async function timeNow(){
     let [ city,country,timezone ] = await getTown()   
-    let date = new Date().toLocaleString(0,{timeZone: `${timezone}`})
-    date = new Date(Date.parse(date));
+    let date = new Date().toLocaleString('en-EN',{timeZone: `${timezone}`})
+    date = new Date(date);
     let minute = date.getMinutes();
     if(minute < 10){
         minute = '0' + date.getMinutes();
@@ -104,8 +104,8 @@ async function timeNow(){
 async function weatherOnWeek(){
     let countDay = 7;
     let [ city,country,timezone ] = await getTown()   
-    let date = new Date().toLocaleString(0,{timeZone: `${timezone}`})
-    date = new Date(Date.parse(date));
+    let date = new Date().toLocaleString('en-EN',{timeZone: `${timezone}`})
+    date = new Date(date);
     document.getElementsByClassName('main__section3__weather-day')[0].innerHTML = `${DAY_FULL[(+date.getDay() + 1) % countDay]}`;
     document.getElementsByClassName('main__section3__weather-day')[1].innerHTML = `${DAY_FULL[(+date.getDay() + 2) % countDay]}`;
     document.getElementsByClassName('main__section3__weather-day')[2].innerHTML = `${DAY_FULL[(+date.getDay() + 3) % countDay]}`;
@@ -157,7 +157,7 @@ async function createTemperature(){
         return err;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -175,7 +175,7 @@ async function createWeather(){
     let [city, country] = await getTown();
     town = city;
     countryName = country;
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244&days=4`);
     for(let i = 0; i < 3; i++){
         let img = document.createElement('img');
         let span = document.createElement('span');
@@ -283,7 +283,7 @@ async function addInfo(){
     let [city, country] = await getTown();
     town = city;
     countryName = country
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -301,26 +301,24 @@ async function backgroundImg(){
     const SEASON = ['winter','winter','spring','spring','spring','summer','summer','summer','autumn','autumn','autumn','winter'];
     let time;
     let weather;
-    let town;
-    let countryName;
-    let [ city,country,timezone ] = await getTown() 
-    let date = new Date().toLocaleString(0,{timeZone: `${timezone}`})
-    date = new Date(Date.parse(date));
-    town = city;
-    countryName = country;
-    date = new Date(date);
-    if(date.getHours() > 6 && date.getHours() < 18)
-        time = 'day'
-    else time = 'night';
+    let date;
+    let [town,country] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${country}&key=753dbcf8ea7448dca74e39bf78586244`);
+    console.log()
     try{
-        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=951d785022f045b5bc35af3182159042`);
-        let weatherNow = await reqWeather;
-        weatherNow = weatherNow.data[0]
-        weather = weatherNow.weather.description;
+    let weatherNow = await reqWeather;
+    weatherNow = weatherNow.data[0];
+    let timezone = weatherNow.timezone;
+    weather = weatherNow.weather.description;
+    date = new Date().toLocaleString('en-EN',{timeZone: `${timezone}`})
+    date = new Date(date);
     }
     catch(err){
         return err;
     }
+    if(date.getHours() > 6 && date.getHours() < 18)
+        time = 'day'
+    else time = 'night';
     try{
     let req = requestItem(`https://api.unsplash.com/photos/random?query=${SEASON[date.getMonth()]},${time},${weather}&client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23`)
     let { urls } = await req;

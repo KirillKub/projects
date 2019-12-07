@@ -14,6 +14,7 @@ body{
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .main__section1__switch-photo{
@@ -60,6 +61,7 @@ body{
     justify-content: space-around;
     width: 200px;
     margin-top:40px;
+    align-items: center;
 }
 
 .main__section1__search-input{
@@ -219,6 +221,15 @@ body{
     border-radius: 5px;
 }
 
+.lang-EN,.lang-RU,.lang-BY{
+    text-align: center;
+    margin-top: 10px;
+}
+
+.active-lang{
+    background: lightcyan;
+}
+
 @media screen and (max-width:670px){
     .main__section1__search{
         justify-content:center;
@@ -254,10 +265,17 @@ body{
     .main__section4-map{
         width: 300px;
     }
+    .mapboxgl-map{
+        width: 300px!important;
+    }
 }
 
 @media screen and (max-width:409px){
     .main__section1__search-button{
         margin-top:10px;
     }
+    .main__section2__temperature-description{
+        text-align: center;
+    }
 }
+
