@@ -1,5 +1,9 @@
 import requestItem from './request';
 import { COUNTRY } from './country'
+import IMG_CIRCLE from '../dist/assets/images/circle.png';
+import IMG_SEARCH from '../dist/assets/images/search.png';
+import IMG_SWITCH from '../dist/assets/images/switch.png';
+import IMG_DOWN from '../dist/assets/images/down.png';
 
 const BODY = ['main__section1','main__wrapper']
 const MAIN_SECTION1 = ['main__section1__box','main__section1__search']
@@ -73,7 +77,7 @@ function createSearch(){
     let div = document.createElement('div');
     let img = document.createElement('img');
 
-    img.src = '../dist/assets/images/search.png'
+    img.src = IMG_SEARCH;
     input.classList.add(`main__section1__search-input`);
     div.classList.add(`search-flex-item`);
 
@@ -136,8 +140,7 @@ async function createTemperature(){
     divSecond.classList.add('main__section2__temperature-description');
     divFirstImage.classList.add('temperature-now-img');
 
-
-    divFirstImage.src = '../dist/assets/images/circle.png'
+    divFirstImage.src = IMG_CIRCLE;
 
     divFirst.append(span);
     divFirst.append(divFirstImage);
@@ -157,7 +160,7 @@ async function createTemperature(){
         return err;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -175,7 +178,7 @@ async function createWeather(){
     let [city, country] = await getTown();
     town = city;
     countryName = country;
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00&days=4`);
     for(let i = 0; i < 3; i++){
         let img = document.createElement('img');
         let span = document.createElement('span');
@@ -260,7 +263,7 @@ function create(mas,className){
 
 function addImg(){
     let img = document.createElement('img');
-    img.src = '../dist/assets/images/switch.png';
+    img.src = IMG_SWITCH;
     document.getElementsByClassName('main__section1__switch-photo')[0].append(img);
 }
 
@@ -272,7 +275,7 @@ function addTemperature(){
 
 function switchLang(){
     let img = document.createElement('img');
-    img.src = '../dist/assets/images/down.png'; 
+    img.src = IMG_DOWN; 
     document.getElementsByClassName('main__section1__switch-lang')[0].innerHTML = 'EN';
     document.getElementsByClassName('main__section1__switch-lang')[0].append(img);
 }
@@ -283,7 +286,7 @@ async function addInfo(){
     let [city, country] = await getTown();
     town = city;
     countryName = country
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -303,7 +306,7 @@ async function backgroundImg(){
     let weather;
     let date;
     let [town,country] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${country}&key=753dbcf8ea7448dca74e39bf78586244`);
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${country}&key=917162f5b55c4a29bd9695f2d46e8d00`);
     console.log()
     try{
     let weatherNow = await reqWeather;

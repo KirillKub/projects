@@ -1,9 +1,9 @@
-import { createPage, backgroundImg, getTown, timeNow } from './init';
+import { createPage, backgroundImg } from './init';
 import requestItem from './request';
 import { COUNTRY } from './country'
 
 let input = '';
-let temp;
+let temp = 'units=M';
 let town;
 let language = {
     lang: 'EN',
@@ -25,7 +25,7 @@ setInterval(time,60000);
 
 async function time(){
     let [town,country] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=753dbcf8ea7448dca74e39bf78586244`);
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00`);
     try{
         let weatherNow = await reqWeather;
         weatherNow = weatherNow.data[0];
@@ -66,7 +66,7 @@ document.getElementsByClassName('main__section1__switch-temperature')[0].addEven
     town = city;
     countryName = country;
     target.classList.contains('switch-temperature-item-C') ? temp = 'units=M' : temp = 'units=I'
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=753dbcf8ea7448dca74e39bf78586244&${temp}`);
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}`);
     try{
         let weatherNow = await reqWeather;
         weatherNow = weatherNow.data[0]
@@ -76,7 +76,7 @@ document.getElementsByClassName('main__section1__switch-temperature')[0].addEven
     catch(err){
         return err;
     }   
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=753dbcf8ea7448dca74e39bf78586244&${temp}&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}&days=4`);
     for(let i = 0; i < 3; i++){
         try{
             let weatherNow = await req;
@@ -93,7 +93,9 @@ document.getElementsByClassName('main__section1__search-input')[0].addEventListe
     input = document.getElementsByClassName('main__section1__search-input')[0].value;
 })
 
-document.getElementsByClassName('main__section1__search-button')[0].addEventListener('click',async function search(){
+document.getElementsByClassName('main__section1__search-button')[0].addEventListener('click',search)
+
+async function search(){
     town = input;
     let long;
     let lat;
@@ -106,7 +108,7 @@ document.getElementsByClassName('main__section1__search-button')[0].addEventList
     if(lang === 'BY'){
         lang = 'be'
     }
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=753dbcf8ea7448dca74e39bf78586244&${temp}&lang=${lang}`);
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}&lang=${lang}`);
     try{
         weatherNow = await reqWeather;
         weatherNow = weatherNow.data[0];
@@ -169,7 +171,7 @@ document.getElementsByClassName('main__section1__search-button')[0].addEventList
     document.getElementsByClassName('main__section4-text')[1].innerHTML = `Даўгата: ${long}`;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=753dbcf8ea7448dca74e39bf78586244&${temp}&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}&days=4`);
     for(let i = 0; i < 3; i++){
         try{
             let weatherNow = await req;
@@ -180,7 +182,6 @@ document.getElementsByClassName('main__section1__search-button')[0].addEventList
             return err;
         }
     }
-
     mapboxgl.accessToken = 'pk.eyJ1Ijoia2lyaWxsa3ViIiwiYSI6ImNrM2tqd2IyZTAzdDEza240OHE0NGZvMWwifQ.u4ePMf5LJIEOrcLdPByj2g';
     var mapboxClient = mapboxSdk({ accessToken: mapboxgl.accessToken });
     mapboxClient.geocoding.forwardGeocode({
@@ -204,7 +205,7 @@ document.getElementsByClassName('main__section1__search-button')[0].addEventList
         .addTo(map);
         }
     });
-})
+}
 
 document.getElementsByClassName('main__section1__switch-lang')[0].addEventListener('click', function translate(){
     let lang = language.lang;
@@ -280,7 +281,7 @@ document.getElementsByClassName('main__section1__switch-lang')[0].addEventListen
         lang = 'be';
     }
     if(event.target.classList.contains('lang-EN') || event.target.classList.contains('lang-RU') || event.target.classList.contains('lang-BY')){
-        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=753dbcf8ea7448dca74e39bf78586244&lang=${langNow}`);
+        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&lang=${langNow}`);
         try{
             let weatherNow = await reqWeather;
             weatherNow = weatherNow.data[0];
@@ -418,3 +419,20 @@ document.getElementsByClassName('main__section1__switch-lang')[0].addEventListen
     }
 })
 
+
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = new SpeechRecognition();
+recognition.interimResults = true;
+recognition.lang = 'en-US';
+recognition.maxAlternatives = 1;
+let transcript;
+
+recognition.addEventListener('result', (e) => {
+    transcript = Array.from(e.results).map(result => result[0]).map(result => result.transcript);
+    input = transcript;
+    setTimeout(search, 1000);
+})
+
+document.getElementsByClassName('search-flex-item')[0].addEventListener('click',async function searchWithVoice(){
+    recognition.start();
+})
