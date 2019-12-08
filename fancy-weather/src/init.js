@@ -160,12 +160,12 @@ async function createTemperature(){
         return err;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=f9e76e514b7e4fd297217013999160c4`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
         span.innerHTML = Math.round(weatherNow.temp);
-        img.src = `../dist/assets/images/weather/${weatherNow.weather.icon}.png`
+        img.src = `https://raw.githubusercontent.com/KirillKub/ImageHelp/master/images/weather/${weatherNow.weather.icon}.png`;
         }
     catch(err){
         return err;
@@ -178,7 +178,7 @@ async function createWeather(){
     let [city, country] = await getTown();
     town = city;
     countryName = country;
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=f9e76e514b7e4fd297217013999160c4&days=4`);
     for(let i = 0; i < 3; i++){
         let img = document.createElement('img');
         let span = document.createElement('span');
@@ -187,7 +187,7 @@ async function createWeather(){
             let weatherNow = await req;
             weatherNow = weatherNow.data[i + 1];
             span.innerHTML = Math.round(weatherNow.temp) + '°';
-            img.src = `../dist/assets/images/weather/${weatherNow.weather.icon}.png`;
+            img.src = `https://raw.githubusercontent.com/KirillKub/ImageHelp/master/images/weather/${weatherNow.weather.icon}.png`;
             img.style.width = '68px'
             }
         catch(err){
@@ -286,7 +286,7 @@ async function addInfo(){
     let [city, country] = await getTown();
     town = city;
     countryName = country
-    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${countryName}&key=f9e76e514b7e4fd297217013999160c4`);
     try{
         let weatherNow = await req;
         weatherNow = weatherNow.data[0]
@@ -306,8 +306,7 @@ async function backgroundImg(){
     let weather;
     let date;
     let [town,country] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${country}&key=917162f5b55c4a29bd9695f2d46e8d00`);
-    console.log()
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=f9e76e514b7e4fd297217013999160c4`);
     try{
     let weatherNow = await reqWeather;
     weatherNow = weatherNow.data[0];
@@ -323,13 +322,12 @@ async function backgroundImg(){
         time = 'day'
     else time = 'night';
     try{
-    let req = requestItem(`https://api.unsplash.com/photos/random?query=${SEASON[date.getMonth()]},${time},${weather}&client_id=ac0b1211b12e78e6cac4831942dc71d2af196faa332462c746a0a3d213383c23`)
+    let req = requestItem(`https://api.unsplash.com/photos/random?query=${weather},${time},${SEASON[date.getMonth()]}&client_id=dda88c275d8df29539976c1d2daef60cbafb230b82e8e71793e4af7e4b11a79b`)
     let { urls } = await req;
-    document.getElementsByClassName('main')[0].style.background = `url(${urls.small}) center center / cover no-repeat`;
+    document.getElementsByClassName('main')[0].style.background = `url(${urls.regular}) center center / cover no-repeat`;
         }
     catch(err){
         return err;
     }
 }
-
 export { createPage,backgroundImg,getTown,timeNow }

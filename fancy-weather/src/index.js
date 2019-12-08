@@ -19,13 +19,20 @@ const DAY_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','S
 const MONTH = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTH_RUS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTH_BLR = ['Студзень','Люты','Сакавік','Красавік','Травень','Чэрвень','Ліпень','Жнівень','Верасень','Кастрычнік','Лістапад','Снежань']
-   
+
+
 createPage();
 setInterval(time,60000);
 
 async function time(){
     let [town,country] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00`);
+    if(country === 'Беларусь' || country === 'Belarus'){
+        country = 'BY';
+    }
+    else {
+        country = '';
+    }
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town},${country}&key=f9e76e514b7e4fd297217013999160c4`);
     try{
         let weatherNow = await reqWeather;
         weatherNow = weatherNow.data[0];
@@ -66,17 +73,18 @@ document.getElementsByClassName('main__section1__switch-temperature')[0].addEven
     town = city;
     countryName = country;
     target.classList.contains('switch-temperature-item-C') ? temp = 'units=M' : temp = 'units=I'
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}`);
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=f9e76e514b7e4fd297217013999160c4&${temp}`);
     try{
         let weatherNow = await reqWeather;
-        weatherNow = weatherNow.data[0]
+        weatherNow = weatherNow.data[0];
+        let feelsLike = document.getElementsByClassName('main__section2__element')[1].innerHTML.split(':')[0];
         document.getElementsByClassName('main__section2__temperature-now')[0].firstChild.textContent = Math.round(weatherNow.temp);
-        document.getElementsByClassName('main__section2__element')[1].innerHTML = `Feels like: ${Math.round(weatherNow.app_temp)}°`;
+        document.getElementsByClassName('main__section2__element')[1].textContent = `${feelsLike}: ${Math.round(weatherNow.app_temp)}°`;
         }
     catch(err){
         return err;
     }   
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town},${countryName}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=f9e76e514b7e4fd297217013999160c4&${temp}&days=4`);
     for(let i = 0; i < 3; i++){
         try{
             let weatherNow = await req;
@@ -108,7 +116,7 @@ async function search(){
     if(lang === 'BY'){
         lang = 'be'
     }
-    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}&lang=${lang}`);
+    let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=f9e76e514b7e4fd297217013999160c4&${temp}&lang=${lang}`);
     try{
         weatherNow = await reqWeather;
         weatherNow = weatherNow.data[0];
@@ -171,7 +179,7 @@ async function search(){
     document.getElementsByClassName('main__section4-text')[1].innerHTML = `Даўгата: ${long}`;
     }
 
-    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&${temp}&days=4`);
+    let req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=f9e76e514b7e4fd297217013999160c4&${temp}&days=4`);
     for(let i = 0; i < 3; i++){
         try{
             let weatherNow = await req;
@@ -205,6 +213,7 @@ async function search(){
         .addTo(map);
         }
     });
+    backgroundImg()
 }
 
 document.getElementsByClassName('main__section1__switch-lang')[0].addEventListener('click', function translate(){
@@ -281,7 +290,7 @@ document.getElementsByClassName('main__section1__switch-lang')[0].addEventListen
         lang = 'be';
     }
     if(event.target.classList.contains('lang-EN') || event.target.classList.contains('lang-RU') || event.target.classList.contains('lang-BY')){
-        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=917162f5b55c4a29bd9695f2d46e8d00&lang=${langNow}`);
+        let reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=f9e76e514b7e4fd297217013999160c4&lang=${langNow}`);
         try{
             let weatherNow = await reqWeather;
             weatherNow = weatherNow.data[0];
