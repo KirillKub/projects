@@ -1,6 +1,7 @@
 import { createPage, backgroundImg } from './init';
 import requestItem from './request';
 import { COUNTRY } from './country'
+import IMG_DOWN from '../dist/assets/images/down.png';
 
 let input = '';
 let temp = 'units=M';
@@ -237,7 +238,7 @@ document.getElementsByClassName('main__section1__switch-lang')[0].addEventListen
 
 document.getElementsByClassName('main__section1__switch-lang')[0].addEventListener('mouseleave', function translateHelper(){
     let img = document.createElement('img');
-    img.src = '../dist/assets/images/down.png';
+    img.src = IMG_DOWN;
     document.getElementsByClassName('main__section1__switch-lang')[0].style.height = '44px'
     document.getElementsByClassName('main__section1__switch-lang')[0].style.display = 'flex'
     document.getElementsByClassName('main__section1__switch-lang')[0].innerHTML = language.lang;
