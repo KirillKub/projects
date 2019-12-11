@@ -281,11 +281,7 @@ async function backgroundImg() {
   try {
     const req = requestItem(`https://api.unsplash.com/photos/random?query=${weather},${time},${SEASON[date.getMonth()]}&client_id=${process.env.KEY_UNSPLASH}`);
     const { urls } = await req;
-    let img = document.createElement('img');
     document.body.style.background = `url(${urls.regular}) center center / cover no-repeat fixed`;
-    document.body.style.background.onload = function(){
-        console.log(5)
-    }
   } catch (err) {
     return err;
   }

@@ -57,7 +57,7 @@ async function time() {
 setInterval(time, 60000);
 
 document.getElementsByClassName('main__section1__switch-photo')[0].addEventListener('click', function swapBg() {
-    backgroundImg();
+  backgroundImg();
 });
 
 document.getElementsByClassName('main__section1__switch-temperature')[0].addEventListener('click', async function swapTemperature(event) {
@@ -434,9 +434,9 @@ recognition.addEventListener('result', (e) => {
   input = transcript;
 });
 
-recognition.addEventListener('speechend', (e) => {
-    search();
-  });
+recognition.addEventListener('speechend', () => {
+  search();
+});
 
 document.getElementsByClassName('search-flex-item')[0].addEventListener('click', async function searchWithVoice() {
   recognition.start();
