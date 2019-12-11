@@ -1,5 +1,5 @@
 const path = require('path');
-
+const Dotenv = require('dotenv-webpack');
 module.exports = {
   entry: './fancy-weather/src/index.js',
   output: {
@@ -22,5 +22,8 @@ module.exports = {
         ],
     }]
   },
+  plugins: [
+    new Dotenv()
+  ],
   watch: true,
 };

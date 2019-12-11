@@ -4,7 +4,7 @@
   "description": "Private repository for @kirillkub",
   "private": true,
   "scripts": {
-    "test": "mocha",
+    "test": "mocha fancy-weather/test",
     "build": "webpack",
     "lint": "./node_modules/.bin/eslint fancy-weather/src/*.js",
     "babel": "./node_modules/.bin/babel fancy-weather/src --out-dir fancy-weather/lib"
@@ -22,7 +22,10 @@
   "devDependencies": {
     "@babel/cli": "^7.7.5",
     "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
     "@babel/preset-env": "^7.7.6",
+    "@babel/register": "^7.7.4",
+    "chai": "^4.2.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
@@ -32,6 +35,7 @@
     "file-loader": "^5.0.2",
     "image-webpack-loader": "^6.0.0",
     "mocha": "^6.2.2",
+    "nodemon": "^2.0.1",
     "source-map-loader": "^0.2.4",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
@@ -39,6 +43,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
+    "dotenv": "^8.2.0",
+    "dotenv-webpack": "^1.7.0",
     "webpack-require-from": "^1.8.0"
   }
 }
