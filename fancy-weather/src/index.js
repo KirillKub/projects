@@ -178,7 +178,7 @@ async function langInit() {
   document.getElementsByClassName('main__section1__switch-lang')[0].append(img);
 }
 
-if (localStorage.getItem('lang') !== 'EN') {
+if (localStorage.getItem('lang') === 'RU' || localStorage.getItem('lang') === 'BY') {
   setTimeout(langInit, 3000);
   language.lang = localStorage.getItem('lang');
 }
