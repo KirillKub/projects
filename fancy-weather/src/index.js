@@ -161,7 +161,7 @@ async function search() {
     document.getElementsByClassName('main__section4-text')[1].innerHTML = `Долгота: ${long.split('.')[0]}°${long.split('.')[1].substr(0, 2)}'`;
   }
   if (language.lang === 'BY') {
-    document.getElementsByClassName('main__section2__day')[0].innerHTML = `${DAY[date.getDay()]} ${date.getDate()} ${MONTH[date.getMonth()]}, ${date.getHours()}:${minute}`;
+    document.getElementsByClassName('main__section2__day')[0].innerHTML = `${DAY_BLR[date.getDay()]} ${date.getDate()} ${MONTH_BLR[date.getMonth()]}, ${date.getHours()}:${minute}`;
     document.getElementsByClassName('main__section2__temperature-now')[0].firstChild.textContent = Math.round(dataCopy.temp);
     document.getElementsByClassName('main__section2__element')[0].innerHTML = dataCopy.weather.description;
     document.getElementsByClassName('main__section2__element')[1].innerHTML = `Адчувае, як: ${Math.round(dataCopy.app_temp)}°`;

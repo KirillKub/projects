@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('chai').assert
 const COUNTRY = require('../lib/country.js')
 
 describe('Country', function() {
@@ -10,5 +10,8 @@ describe('Country', function() {
     });
     it('should return France when country code Fr', function() {
         assert.equal(COUNTRY.default['FR'], 'France');
+    });
+    it('should return Object', function() {
+        assert.typeOf(COUNTRY, 'Object');
     });
 });

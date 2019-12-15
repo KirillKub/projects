@@ -279,7 +279,7 @@ async function backgroundImg() {
   }
   if (date.getHours() > 6 && date.getHours() < 18) { time = 'day'; } else time = 'night';
   try {
-    const req = requestItem(`https://api.unsplash.com/photos/random?query=${weather},${time},${SEASON[date.getMonth()]}&client_id=${process.env.KEY_UNSPLASH}`);
+    const req = requestItem(`https://api.unsplash.com/photos/random?query=${weather}+${time}+${SEASON[date.getMonth()]}&client_id=${process.env.KEY_UNSPLASH}`);
     const { urls } = await req;
     document.body.style.background = `url(${urls.regular}) center center / cover no-repeat fixed`;
   } catch (err) {
