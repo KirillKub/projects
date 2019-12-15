@@ -24,6 +24,23 @@ const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', '
 let lat;
 let long;
 
+function waitLoad() {
+  document.body.style.visibility = 'hidden';
+  const div = document.createElement('div');
+  div.classList.add('loading');
+  div.style.visibility = 'visible';
+  const div2 = document.createElement('div');
+  const div3 = document.createElement('div');
+  div2.classList.add('squareXS');
+  div.style.visibility = 'visible';
+  div3.classList.add('squareXL');
+  div.append(div2);
+  div.append(div3);
+  document.body.append(div);
+}
+
+waitLoad();
+
 async function addLoc() {
   const location = requestItem('https://ipinfo.io/json?token=fa763d842192af');
   try {
@@ -132,7 +149,6 @@ async function createTemperature() {
   } catch (err) {
     return err;
   }
-  return '';
 }
 
 async function createWeather() {
@@ -260,6 +276,11 @@ async function addInfo() {
   return [town, countryName];
 }
 
+function wait() {
+  document.body.style.visibility = 'visible';
+  document.getElementsByClassName('loading')[0].style.display = 'none';
+}
+
 async function backgroundImg() {
   const SEASON = ['winter', 'winter', 'spring', 'spring', 'spring', 'summer', 'summer', 'summer', 'autumn', 'autumn', 'autumn', 'winter'];
   let time;
@@ -281,6 +302,11 @@ async function backgroundImg() {
   try {
     const req = requestItem(`https://api.unsplash.com/photos/random?query=${weather}+${time}+${SEASON[date.getMonth()]}&client_id=${process.env.KEY_UNSPLASH}`);
     const { urls } = await req;
+    const img = document.createElement('img');
+    img.src = urls.regular;
+    img.onload = () => {
+      setTimeout(wait, 2000);
+    };
     document.body.style.background = `url(${urls.regular}) center center / cover no-repeat fixed`;
   } catch (err) {
     return err;

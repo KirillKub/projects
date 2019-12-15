@@ -22,6 +22,172 @@ const MONTH_BLR = ['Студзень', 'Люты', 'Сакавік', 'Краса
 
 createPage();
 
+async function tempInit() {
+  document.getElementsByClassName('switch-temperature-item-C')[0].classList.remove('active');
+  document.getElementsByClassName('switch-temperature-item-F')[0].classList.add('active');
+  const [city] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
+  town = city;
+  temp = 'units=I';
+  const reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=${process.env.KEY_WEATHERBIT}&${temp}`);
+  try {
+    const weatherNow = await reqWeather;
+    const data = weatherNow.data[0];
+    const feelsLike = document.getElementsByClassName('main__section2__element')[1].innerHTML.split(':')[0];
+    document.getElementsByClassName('main__section2__temperature-now')[0].firstChild.textContent = Math.round(data.temp);
+    document.getElementsByClassName('main__section2__element')[1].textContent = `${feelsLike}: ${Math.round(data.app_temp)}°`;
+  } catch (err) {
+    return err;
+  }
+  const req = requestItem(`https://api.weatherbit.io/v2.0/forecast/daily?city=${town}&key=${process.env.KEY_WEATHERBIT}&${temp}&days=4`);
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      let weatherNow = await req;
+      weatherNow = weatherNow.data[i + 1];
+      document.getElementsByClassName('main__section3__weather-temperature')[i].firstChild.textContent = `${Math.round(weatherNow.temp)}°`;
+    } catch (err) {
+      return err;
+    }
+  }
+}
+
+async function langInit() {
+  let firstDay = document.getElementsByClassName('main__section3__weather-day')[0].textContent;
+  let secondDay = document.getElementsByClassName('main__section3__weather-day')[1].textContent;
+  let thirdDay = document.getElementsByClassName('main__section3__weather-day')[2].textContent;
+  const dateNow = document.getElementsByClassName('main__section2__day')[0].innerHTML.split(' ');
+  if (DAY_FULL_RUS.indexOf(firstDay) !== -1) {
+    firstDay = DAY_FULL_RUS.indexOf(firstDay);
+  } else if (DAY_FULL_BLR.indexOf(firstDay) !== -1) {
+    firstDay = DAY_FULL_BLR.indexOf(firstDay);
+  } else if (DAY_FULL.indexOf(firstDay) !== -1) {
+    firstDay = DAY_FULL.indexOf(firstDay);
+  }
+
+  if (DAY_FULL_RUS.indexOf(secondDay) !== -1) {
+    secondDay = DAY_FULL_RUS.indexOf(secondDay);
+  } else if (DAY_FULL_BLR.indexOf(secondDay) !== -1) {
+    secondDay = DAY_FULL_BLR.indexOf(secondDay);
+  } else if (DAY_FULL.indexOf(secondDay) !== -1) {
+    secondDay = DAY_FULL.indexOf(secondDay);
+  }
+
+  if (DAY_FULL_RUS.indexOf(thirdDay) !== -1) {
+    thirdDay = DAY_FULL_RUS.indexOf(thirdDay);
+  } else if (DAY_FULL_BLR.indexOf(thirdDay) !== -1) {
+    thirdDay = DAY_FULL_BLR.indexOf(thirdDay);
+  } else if (DAY_FULL.indexOf(thirdDay) !== -1) {
+    thirdDay = DAY_FULL.indexOf(thirdDay);
+  }
+  const [TOWN] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
+  let lang = localStorage.getItem('lang');
+  let langNow = localStorage.getItem('lang');
+  if (langNow === 'BY') {
+    langNow = 'be';
+  }
+  let desc;
+  if (lang === 'BY') {
+    lang = 'be';
+  }
+  const reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${TOWN}&key=${process.env.KEY_WEATHERBIT}&lang=${langNow}`);
+  try {
+    const weatherNow = await reqWeather;
+    const data = weatherNow.data[0];
+    desc = data.weather.description;
+  } catch (err) {
+    return err;
+  }
+  if (langNow === 'RU') {
+    document.getElementsByClassName('main__section1__search-input')[0].placeholder = 'Поиск города';
+    document.getElementsByClassName('main__section1__search-button')[0].innerHTML = 'поиск';
+    const lat = document.getElementsByClassName('main__section4-text')[0].innerHTML.split(': ')[1];
+    const long = document.getElementsByClassName('main__section4-text')[1].innerHTML.split(': ')[1];
+    document.getElementsByClassName('main__section4-text')[0].innerHTML = `Широта: ${lat}`;
+    document.getElementsByClassName('main__section4-text')[1].innerHTML = `Долгота: ${long}`;
+
+    const feels = document.getElementsByClassName('main__section2__element')[1].innerHTML.split(': ')[1];
+    const wind = document.getElementsByClassName('main__section2__element')[2].innerHTML.split(': ')[1];
+    const humidity = document.getElementsByClassName('main__section2__element')[3].innerHTML.split(': ')[1];
+    document.getElementsByClassName('main__section2__element')[0].innerHTML = `${desc}`;
+    document.getElementsByClassName('main__section2__element')[1].innerHTML = `Ощущается как: ${feels}`;
+    document.getElementsByClassName('main__section2__element')[2].innerHTML = `Ветер: ${wind}`;
+    document.getElementsByClassName('main__section2__element')[3].innerHTML = `Влажность: ${humidity}`;
+
+    document.getElementsByClassName('main__section3__weather-day')[0].innerHTML = DAY_FULL_RUS[firstDay];
+    document.getElementsByClassName('main__section3__weather-day')[1].innerHTML = DAY_FULL_RUS[secondDay];
+    document.getElementsByClassName('main__section3__weather-day')[2].innerHTML = DAY_FULL_RUS[thirdDay];
+
+    dateNow[0] = DAY_RUS[DAY.indexOf(dateNow[0])] || DAY_RUS[DAY_RUS.indexOf(dateNow[0])]
+          || DAY_RUS[DAY_BLR.indexOf(dateNow[0])];
+    dateNow[2] = MONTH_RUS[MONTH.indexOf(dateNow[2].substr(0, dateNow[2].length - 1))]
+          || MONTH_RUS[MONTH_RUS.indexOf(dateNow[2].substr(0, dateNow[2].length - 1))]
+          || MONTH_RUS[MONTH_BLR.indexOf(dateNow[2].substr(0, dateNow[2].length - 1))];
+    dateNow[2] += ',';
+    document.getElementsByClassName('main__section2__day')[0].innerHTML = dateNow.join(' ');
+
+    const text = document.getElementsByClassName('main__section2__town')[0].innerHTML;
+    const translate = requestItem(`https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-ru&key=trnsl.1.1.20191205T163757Z.c3d6ab6ae7596250.cc4958ec8ec058568342d356b7fd47f45f281462&text=${text}`);
+    try {
+      const newText = await translate;
+      document.getElementsByClassName('main__section2__town')[0].innerHTML = newText.text.join('');
+    } catch (err) {
+      return err;
+    }
+    language.lang = 'RU';
+  }
+  if (langNow === 'be') {
+    document.getElementsByClassName('main__section1__search-input')[0].placeholder = 'Пошук горада';
+    document.getElementsByClassName('main__section1__search-button')[0].innerHTML = 'пошук';
+    const lat = document.getElementsByClassName('main__section4-text')[0].innerHTML.split(': ')[1];
+    const long = document.getElementsByClassName('main__section4-text')[1].innerHTML.split(': ')[1];
+    document.getElementsByClassName('main__section4-text')[0].innerHTML = `Шырота: ${lat}`;
+    document.getElementsByClassName('main__section4-text')[1].innerHTML = `Даўгата: ${long}`;
+
+    const feels = document.getElementsByClassName('main__section2__element')[1].innerHTML.split(': ')[1];
+    const wind = document.getElementsByClassName('main__section2__element')[2].innerHTML.split(': ')[1];
+    const humidity = document.getElementsByClassName('main__section2__element')[3].innerHTML.split(': ')[1];
+    document.getElementsByClassName('main__section2__element')[0].innerHTML = `${desc}`;
+    document.getElementsByClassName('main__section2__element')[1].innerHTML = `Адчувае, як: ${feels}`;
+    document.getElementsByClassName('main__section2__element')[2].innerHTML = `Вецер: ${wind}`;
+    document.getElementsByClassName('main__section2__element')[3].innerHTML = `Вільготнасць: ${humidity}`;
+
+    document.getElementsByClassName('main__section3__weather-day')[0].innerHTML = DAY_FULL_BLR[firstDay];
+    document.getElementsByClassName('main__section3__weather-day')[1].innerHTML = DAY_FULL_BLR[secondDay];
+    document.getElementsByClassName('main__section3__weather-day')[2].innerHTML = DAY_FULL_BLR[thirdDay];
+
+    dateNow[0] = DAY_BLR[DAY.indexOf(dateNow[0])] || DAY_BLR[DAY_RUS.indexOf(dateNow[0])]
+          || DAY_BLR[DAY_BLR.indexOf(dateNow[0])];
+    dateNow[2] = MONTH_BLR[MONTH.indexOf(dateNow[2].substr(0, dateNow[2].length - 1))]
+          || MONTH_BLR[MONTH_RUS.indexOf(dateNow[2].substr(0, dateNow[2].length - 1))]
+          || MONTH_BLR[MONTH_BLR.indexOf(dateNow[2].substr(0, dateNow[2].length - 1))];
+    dateNow[2] += ',';
+    document.getElementsByClassName('main__section2__day')[0].innerHTML = dateNow.join(' ');
+
+    const text = document.getElementsByClassName('main__section2__town')[0].innerHTML;
+    const translate = requestItem(`https://translate.yandex.net/api/v1.5/tr.json/translate?lang=en-be&key=trnsl.1.1.20191205T163757Z.c3d6ab6ae7596250.cc4958ec8ec058568342d356b7fd47f45f281462&text=${text}`);
+    try {
+      const newText = await translate;
+      document.getElementsByClassName('main__section2__town')[0].innerHTML = newText.text.join('');
+    } catch (err) {
+      return err;
+    }
+    language.lang = 'BY';
+  }
+  const img = document.createElement('img');
+  img.src = IMG_DOWN;
+  document.getElementsByClassName('main__section1__switch-lang')[0].innerHTML = localStorage.getItem('lang');
+  document.getElementsByClassName('main__section1__switch-lang')[0].append(img);
+}
+
+if (localStorage.getItem('lang') !== 'EN') {
+  setTimeout(langInit, 3000);
+  language.lang = localStorage.getItem('lang');
+}
+
+if (localStorage.getItem('temperature') === 'units=I') {
+  setTimeout(tempInit, 1000);
+  temp = 'units=I';
+}
+
 async function time() {
   const [TOWN] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
   let [, country] = document.getElementsByClassName('main__section2__town')[0].innerHTML.split(', ');
@@ -57,6 +223,8 @@ async function time() {
 setInterval(time, 60000);
 
 document.getElementsByClassName('main__section1__switch-photo')[0].addEventListener('click', function swapBg() {
+  document.getElementsByClassName('loading')[0].style.display = 'block';
+  document.body.style.visibility = 'hidden';
   backgroundImg();
 });
 
@@ -89,7 +257,6 @@ document.getElementsByClassName('main__section1__switch-temperature')[0].addEven
       return err;
     }
   }
-  return '';
 });
 
 document.getElementsByClassName('main__section1__search-input')[0].addEventListener('focusout', function out() {
@@ -97,6 +264,8 @@ document.getElementsByClassName('main__section1__search-input')[0].addEventListe
 });
 
 async function search() {
+  document.getElementsByClassName('loading')[0].style.display = 'block';
+  document.body.style.visibility = 'hidden';
   town = input;
   let long;
   let lat;
@@ -210,7 +379,6 @@ async function search() {
     });
   document.getElementsByClassName('main__section1__search-input')[0].value = input;
   backgroundImg();
-  return '';
 }
 
 document.getElementsByClassName('main__section1__search-button')[0].addEventListener('click', search);
@@ -417,7 +585,6 @@ document.getElementsByClassName('main__section1__switch-lang')[0].addEventListen
     }
     language.lang = 'BY';
   }
-  return '';
 });
 
 
@@ -441,3 +608,8 @@ recognition.addEventListener('speechend', () => {
 document.getElementsByClassName('search-flex-item')[0].addEventListener('click', async function searchWithVoice() {
   recognition.start();
 });
+
+window.onunload = () => {
+  localStorage.setItem('lang', language.lang);
+  localStorage.setItem('temperature', temp);
+};

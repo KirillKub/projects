@@ -15,6 +15,7 @@ module.exports = {
     },
     "rules": {
         "prefer-arrow-callback": "off",
-        "no-await-in-loop": "off"
+        "no-await-in-loop": "off",
+        "consistent-return": "off"
     }
 };
