@@ -263,6 +263,14 @@ document.getElementsByClassName('main__section1__search-input')[0].addEventListe
   input = document.getElementsByClassName('main__section1__search-input')[0].value;
 });
 
+document.getElementsByClassName('main__section1__search-input')[0].addEventListener('keydown', function press(event) {
+  if (event.code === 'Enter') {
+    input = document.getElementsByClassName('main__section1__search-input')[0].value;
+    // eslint-disable-next-line
+    search();
+  }
+});
+
 async function search() {
   document.getElementsByClassName('loading')[0].style.display = 'block';
   document.body.style.visibility = 'hidden';
@@ -345,6 +353,9 @@ async function search() {
     try {
       let weather = await req;
       weather = weather.data[i + 1];
+      if (language.lang === 'EN') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL[new Date(weather.moonset_ts * 1000).getDay()];
+      if (language.lang === 'RU') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL_RUS[new Date(weather.moonset_ts * 1000).getDay()];
+      if (language.lang === 'BY') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL_BLR[new Date(weather.moonset_ts * 1000).getDay()];
       document.getElementsByClassName('main__section3__weather-temperature')[i].firstChild.textContent = `${Math.round(weather.temp)}°`;
     } catch (err) {
       return err;
