@@ -290,6 +290,12 @@ async function search() {
   const reqWeather = requestItem(`https://api.weatherbit.io/v2.0/current?city=${town}&key=${process.env.KEY_WEATHERBIT}&${temp}&lang=${lang}`);
   try {
     weatherNow = await reqWeather;
+    if (weatherNow.message === 'Unexpected end of JSON input') {
+      document.body.style.visibility = 'visible';
+      document.getElementsByClassName('loading')[0].style.display = 'none';
+      document.getElementsByClassName('main__section1__search-input')[0].value = 'i don\'t know this city,sorry(';
+      return '';
+    }
     const data = weatherNow.data[0];
     dataCopy = data;
     timezone = data.timezone;
