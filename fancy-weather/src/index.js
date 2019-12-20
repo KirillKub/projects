@@ -297,6 +297,7 @@ async function search() {
       return '';
     }
     const data = weatherNow.data[0];
+    document.getElementsByClassName('main__section2__temperature-img')[0].src = `https://raw.githubusercontent.com/KirillKub/ImageHelp/master/images/weather/${data.weather.icon}.png`;
     dataCopy = data;
     timezone = data.timezone;
     lat = data.lat;
@@ -359,9 +360,10 @@ async function search() {
     try {
       let weather = await req;
       weather = weather.data[i + 1];
-      if (language.lang === 'EN') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL[new Date(weather.moonset_ts * 1000).getDay()];
-      if (language.lang === 'RU') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL_RUS[new Date(weather.moonset_ts * 1000).getDay()];
-      if (language.lang === 'BY') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL_BLR[new Date(weather.moonset_ts * 1000).getDay()];
+      document.getElementsByClassName('main__section3__weather-img')[i].src = `https://raw.githubusercontent.com/KirillKub/ImageHelp/master/images/weather/${weather.weather.icon}.png`;
+      if (language.lang === 'EN') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL[new Date(+date + 24 * 60 * 60 * (1000 * (i + 1))).getDay()];
+      if (language.lang === 'RU') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL_RUS[new Date(+date + 24 * 60 * 60 * (1000 * (i + 1))).getDay()];
+      if (language.lang === 'BY') document.getElementsByClassName('main__section3__weather-day')[i].textContent = DAY_FULL_BLR[new Date(+date + 24 * 60 * 60 * (1000 * (i + 1))).getDay()];
       document.getElementsByClassName('main__section3__weather-temperature')[i].firstChild.textContent = `${Math.round(weather.temp)}°`;
     } catch (err) {
       return err;
