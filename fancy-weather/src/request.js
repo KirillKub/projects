@@ -1,4 +1,4 @@
-export default async function requestItem(query) {
+export default async function makeRequest(query) {
   const url = query;
   try {
     const responce = await fetch(url);
