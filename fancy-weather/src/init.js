@@ -156,7 +156,7 @@ async function createTemperature() {
     span.innerHTML = Math.round(data.temp);
     img.src = `${URLS.PHOTO}${data.weather.icon}.png`;
   } catch (err) {
-    return alert('Something went wrong,try again');
+    return err;
   }
 }
 
@@ -179,7 +179,7 @@ async function createWeather() {
       document.getElementsByClassName('main__section3__weather-temperature')[i].append(img);
     }
   } catch (err) {
-    return alert('Something went wrong,try again');
+    return err;
   }
   return [town, country];
 }
@@ -288,7 +288,7 @@ async function addInfo() {
     document.getElementsByClassName('main__section2__element')[2].innerHTML = `WIND: ${Math.round(data.wind_spd)}M/S`;
     document.getElementsByClassName('main__section2__element')[3].innerHTML = `HUMIDITY: ${data.rh}%`;
   } catch (err) {
-    return alert('Something went wrong,try again');
+    return err;
   }
   return [town, countryName];
 }

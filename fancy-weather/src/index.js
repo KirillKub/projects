@@ -239,7 +239,7 @@ setInterval(time, 60000);
 function swapBg() {
   document.getElementsByClassName('loading')[0].style.display = 'block';
   document.body.style.visibility = 'hidden';
-  getBackgroundImg();
+  getBackgroundImg(language.lang);
 }
 
 async function swapTemperature(event) {
