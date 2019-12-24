@@ -553,7 +553,15 @@ body{
     display: flex; 
 }
 
-.main__section1__switch-photo:hover,.main__section1__switch-lang:hover,.main__section1__switch-temperature:hover{
+.main__section1__switch-photo:hover{
+    cursor: pointer;
+}
+
+.main__section1__switch-lang:hover{
+    cursor: pointer;
+}
+
+.main__section1__switch-temperature:hover{
     cursor: pointer;
 }
 
