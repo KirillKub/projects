@@ -1,27 +1,26 @@
 import { pressKeys } from './tools/checkKeys'
-import { swapSize, canvasSize } from './tools/size'
+import { swapSize, canvasSize, makeActiveSize } from './tools/size'
 import { paintBucket } from './canvas/paintBucket'
 import {rgbToHex } from './color/rgbToHex'
 import { chooseColor,colorHelp } from './tools/chooseColor'
 import { clearCanvas } from './canvas/clear'
+import { makeActiveTool} from './tools/active'
 
 let isPencil = false;
 let isDraw = false;
 let isPaintBucket = false;
 let isChooseColor = false;
-const amber = '#FFC107';
-const gorse = '#FFEB3B';
-const sunsetOrange = '#F74141'
-const azureRadiance = '#0088ff'
-let color = amber;
-let colorPrev = '';
+let isEraser = false;
+const black = '#000000';
+const white = '#FFFFFF';
+let color = black;
 const canvas = document.getElementById('canvas');
 canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-document.getElementById('swapPrevColor').style.background = gorse;
-document.getElementById('inputColor').value = amber;
+// document.getElementById('inputColorPrimary').value = black;
+// document.getElementById('inputColorSecondary').value = white;
 
 if (localStorage.getItem('canvas')) {
   const dataURL = localStorage.getItem('canvas');
@@ -35,19 +34,13 @@ if (localStorage.getItem('canvas')) {
 
 if (localStorage.getItem('size')) {
   if (localStorage.getItem('size') === '128') {
-    document.getElementById('size128').classList.add('active');
-    document.getElementById('size256').classList.remove('active');
-    document.getElementById('size512').classList.remove('active');
+    makeActiveSize('128')
   }
   if (localStorage.getItem('size') === '256') {
-    document.getElementById('size256').classList.add('active');
-    document.getElementById('size128').classList.remove('active');
-    document.getElementById('size512').classList.remove('active');
+    makeActiveSize('256')
   }
   if (localStorage.getItem('size') === '512') {
-    document.getElementById('size512').classList.add('active');
-    document.getElementById('size128').classList.remove('active');
-    document.getElementById('size256').classList.remove('active');
+    makeActiveSize('512')
   }
 }
 
@@ -65,30 +58,28 @@ document.getElementById('size').addEventListener('click', (event) => {
 });
 
 document.getElementById('mainItems').addEventListener('click', (event) => {
+  isPencil = false;
+  isChooseColor = false;
+  isPaintBucket = false;
+  isEraser = false;
   const { target } = event;
   const element = target.closest('div');
-  if (element.className === 'main__items' || element.id === 'transform') { return; }
-  element.classList.add('active');
+  if (element.className === 'main__items') { return; }
   if (element.id === 'pencil') {
+    makeActiveTool('pencil')
     isPencil = true;
-    isPaintBucket = false;
-    isChooseColor = false;
-    document.getElementById('paintBucket').classList.remove('active');
-    document.getElementById('chooseColor').classList.remove('active');
   }
   if (element.id === 'paintBucket') {
-    isPencil = false;
-    isChooseColor = false;
+    makeActiveTool('paintBucket')
     isPaintBucket = true;
-    document.getElementById('chooseColor').classList.remove('active');
-    document.getElementById('pencil').classList.remove('active');
   }
   if (element.id === 'chooseColor') {
-    isPencil = false;
+    makeActiveTool('chooseColor')
     isChooseColor = true;
-    isPaintBucket = false;
-    document.getElementById('pencil').classList.remove('active');
-    document.getElementById('paintBucket').classList.remove('active');
+  }
+  if (element.id === 'eraser') {
+    makeActiveTool('eraser')
+    isEraser = true;
   }
 });
 
@@ -143,23 +134,15 @@ document.getElementById('mainColors').addEventListener('click', (event) => {
   if (element.className === 'main__colors') {
     return;
   }
-  colorPrev = document.getElementById('swapPrevColor').style.background;
-  colorPrev = rgbToHex(colorPrev);
-  document.getElementById('swapPrevColor').style.background = color;
-  if (element.id === 'red' || element.className === 'circle-red') {
-    color = sunsetOrange;
+  element.classList.add('active');
+  if(element.id === 'primaryColor'){
+    document.getElementById('secondaryColor').classList.remove('active');
+    color = document.getElementById('inputColorPrimary').value;
   }
-  if (element.id === 'blue' || element.className === 'circle-blue') {
-    color = azureRadiance;
+  if(element.id === 'secondaryColor'){
+    document.getElementById('primaryColor').classList.remove('active');
+    color = document.getElementById('inputColorSecondary').value;
   }
-  if (element.id === 'prevColor' || element.className === 'circle-prev') {
-    document.getElementById('swapCurrentColor').style.background = colorPrev;
-    document.getElementById('inputColor').value = colorPrev;
-    color = colorPrev;
-    return;
-  }
-  document.getElementById('swapCurrentColor').style.background = color;
-  document.getElementById('inputColor').value = color;
 });
 
 document.getElementById('canvas').addEventListener('click', (event) => {
@@ -168,11 +151,13 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   }
 });
 
-document.getElementById('inputColor').addEventListener('input', () => {
-  document.getElementById('swapPrevColor').style.background = color;
-  color = document.getElementById('inputColor').value;
-  document.getElementById('swapCurrentColor').style.background = color;
+document.getElementById('inputColorPrimary').addEventListener('input', () => {
+  color = document.getElementById('inputColorPrimary').value;
 });
+
+document.getElementById('inputColorSecondary').addEventListener('input', () => {
+  color = document.getElementById('inputColorSecondary').value;
+})
 
 function colorNow() {
   ctx.strokeStyle = color;
@@ -186,5 +171,9 @@ document.getElementById('canvas').addEventListener('click', (event) => {
     color = colorHelp;
   }
 });
+
+window.onunload = () => {
+  localStorage.setItem('canvas', canvas.toDataURL());
+};
 
 export {color, ctx }

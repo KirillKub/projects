@@ -1,6 +1,6 @@
 import {rgbToHex } from '../color/rgbToHex'
-import { ctx } from '../index'
-import { canvasSize,color } from './size'
+import { ctx, color } from '../index'
+import { canvasSize } from './size'
 
 
 let colorHelp;

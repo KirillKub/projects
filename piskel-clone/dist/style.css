@@ -85,21 +85,13 @@ main{
     margin:0 35px 0 18px;
 }
 
-.main__items-box img[alt=transform]{
+.main__items-box img[alt=eraser]{
     margin:0 35px 0 18px;
+    width:  16px;
 }
 
 .border{
     border-top: 1px solid black;
-}
-
-.circle-current{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #FFC107;
-    border: 1px solid #000000;
-    margin: 0 18px 0 18px;
 }
 
 input[type="color"]{
@@ -112,41 +104,14 @@ input[type="color"]{
     background:none;
 }
 
-.circle-prev{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #FFEB3B;
-    border: 1px solid #000000;
-    margin: 0 18px 0 18px;
-}
-
-.circle-blue{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #0088ff;
-    border: 1px solid #000000;
-    margin: 0 18px 0 18px;
-}
-
-.circle-red{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #F74141;
-    border: 1px solid #000000;
-    margin: 0 18px 0 18px;
-}
-
 .main__colors-box{
     display: flex;
     align-items: center;
-    padding-top:25px;
 }
 
+
+
 .main__colors div:nth-child(2){
-    padding-bottom: 25px;
     border-bottom:1px solid rgba(0, 0, 0, 0.12);
 }
 
@@ -222,7 +187,7 @@ canvas{
     background: lightgrey;
 }
 
-#pencil:hover, #chooseColor:hover, #paintBucket:hover{
+#pencil:hover, #chooseColor:hover, #paintBucket:hover, #eraser:hover{
     cursor: pointer;
     background: lightgray;
 }

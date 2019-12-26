@@ -21,4 +21,11 @@ function swapSize(size){
     };
   }
 
-  export { swapSize,canvasSize }
+  function makeActiveSize(size){
+    document.getElementById('size128').classList.remove('active');
+    document.getElementById('size256').classList.remove('active');
+    document.getElementById('size512').classList.remove('active');
+    document.getElementById(`size${size}`).classList.add('active');
+  }
+
+  export { swapSize,canvasSize,makeActiveSize }
