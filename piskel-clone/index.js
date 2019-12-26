@@ -1,7 +1,6 @@
 import { pressKeys } from './tools/checkKeys'
 import { swapSize, canvasSize, makeActiveSize } from './tools/size'
 import { paintBucket } from './canvas/paintBucket'
-import {rgbToHex } from './color/rgbToHex'
 import { chooseColor,colorHelp } from './tools/chooseColor'
 import { clearCanvas } from './canvas/clear'
 import { makeActiveTool} from './tools/active'
@@ -11,16 +10,12 @@ let isDraw = false;
 let isPaintBucket = false;
 let isChooseColor = false;
 let isEraser = false;
-const black = '#000000';
-const white = '#FFFFFF';
-let color = black;
+let color = '#ff0000';
 const canvas = document.getElementById('canvas');
 canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-// document.getElementById('inputColorPrimary').value = black;
-// document.getElementById('inputColorSecondary').value = white;
 
 if (localStorage.getItem('canvas')) {
   const dataURL = localStorage.getItem('canvas');
@@ -28,6 +23,7 @@ if (localStorage.getItem('canvas')) {
   img.crossOrigin = 'Anonymous';
   img.src = dataURL;
   img.onload = function load() {
+    ctx.strokeStyle = color;
     ctx.drawImage(img, 0, 0, 512, 512);
   };
 }
@@ -85,6 +81,7 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (isPencil) {
+    ctx.strokeStyle = color;
     ctx.beginPath();
     const x = event.offsetX;
     const y = event.offsetY;
@@ -104,10 +101,6 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
   }
 });
 
-document.addEventListener('keydown', pressKeys);
-
-document.getElementById('clear').addEventListener('click', clearCanvas)
-
 document.getElementById('canvas').addEventListener('mouseup', () => {
   isDraw = false;
   localStorage.setItem('canvas', canvas.toDataURL());
@@ -122,11 +115,16 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (isPencil) {
     const x = event.offsetX;
     const y = event.offsetY;
+    ctx.strokeStyle = color;
     ctx.fillStyle = color;
     ctx.fillRect(x / (512 / canvasSize), y / (512 / canvasSize), 1, 1);
     localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
+
+document.addEventListener('keydown', pressKeys);
+
+document.getElementById('clear').addEventListener('click', clearCanvas)
 
 document.getElementById('mainColors').addEventListener('click', (event) => {
   const { target } = event;
@@ -159,12 +157,6 @@ document.getElementById('inputColorSecondary').addEventListener('input', () => {
   color = document.getElementById('inputColorSecondary').value;
 })
 
-function colorNow() {
-  ctx.strokeStyle = color;
-}
-
-setInterval(colorNow, 0);
-
 document.getElementById('canvas').addEventListener('click', (event) => {
   if (isPaintBucket) {
     paintBucket(event);
@@ -172,8 +164,45 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   }
 });
 
+let isEraserDraw = false;
+
+document.getElementById('canvas').addEventListener('mousemove', (event) => {
+  if (isEraserDraw) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    ctx.lineWidth = 5;
+    ctx.lineTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
+    y / (parseInt(canvas.style.height, 10) / canvasSize),5,5);
+    ctx.stroke();
+  }
+});
+
+document.getElementById('canvas').addEventListener('mouseup', () => {
+  isEraserDraw = false;
+});
+
+document.getElementById('canvas').addEventListener('mouseleave', () => {
+  isEraserDraw = false;
+});
+
+document.getElementById('canvas').addEventListener('mousedown', (event) => {
+  if (isEraser) {
+    ctx.strokeStyle = 'lightgrey';
+    const x = event.offsetX;
+    const y = event.offsetY;
+    ctx.beginPath();
+    ctx.moveTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
+  y / (parseInt(canvas.style.height, 10) / canvasSize));
+    ctx.fillStyle = 'lightgrey';
+    ctx.fillRect(x / (512 / canvasSize), y / (512 / canvasSize), 5, 5);
+    isEraserDraw = true;
+    localStorage.setItem('canvas', canvas.toDataURL());
+  }
+});
+
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());
+  localStorage.setItem('sizeCanvas', canvasSize);
 };
 
 export {color, ctx }

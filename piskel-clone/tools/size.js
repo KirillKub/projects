@@ -1,5 +1,7 @@
 import {ctx} from '../index'
 
+
+
 let canvasSize = 512;
 
 function swapSize(size){
@@ -27,5 +29,4 @@ function swapSize(size){
     document.getElementById('size512').classList.remove('active');
     document.getElementById(`size${size}`).classList.add('active');
   }
-
   export { swapSize,canvasSize,makeActiveSize }
