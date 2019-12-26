@@ -15,6 +15,7 @@ module.exports = {
     "rules": {
         "no-bitwise": "off",
         "no-continue": "off",
-        "consistent-return": "off"
+        "consistent-return": "off",
+        "prefer-arrow-callback": "off",
     }
 };

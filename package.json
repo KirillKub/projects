@@ -1,10 +1,15 @@
 {
-  "name": "codejam-image-api",
+  "name": "piskel-clone",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "@babel/preset-env": "^7.7.7"
+  },
   "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "jest": "^24.9.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
@@ -13,8 +18,9 @@
     "eslint-plugin-react-hooks": "^1.7.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint index.js"
+    "test": "jest",
+    "build": "webpack",
+    "lint": "./node_modules/.bin/eslint piskel-clone/*.js"
   },
   "author": "",
   "license": "ISC"
