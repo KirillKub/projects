@@ -90,6 +90,11 @@ main{
     width:  16px;
 }
 
+.main__items-box img[alt=stroke]{
+    margin:0 35px 0 18px;
+    width:  16px;
+}
+
 .border{
     border-top: 1px solid black;
 }
@@ -187,7 +192,7 @@ canvas{
     background: lightgrey;
 }
 
-#pencil:hover, #chooseColor:hover, #paintBucket:hover, #eraser:hover{
+#pencil:hover, #chooseColor:hover, #paintBucket:hover, #eraser:hover, #stroke:hover{
     cursor: pointer;
     background: lightgray;
 }

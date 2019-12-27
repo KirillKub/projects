@@ -10,6 +10,7 @@ let isDraw = false;
 let isPaintBucket = false;
 let isChooseColor = false;
 let isEraser = false;
+let isStroke = false;
 let color = '#ff0000';
 const canvas = document.getElementById('canvas');
 canvas.style.width = '512px';
@@ -58,6 +59,7 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
   isChooseColor = false;
   isPaintBucket = false;
   isEraser = false;
+  isStroke = false;
   const { target } = event;
   const element = target.closest('div');
   if (element.className === 'main__items') { return; }
@@ -76,6 +78,10 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
   if (element.id === 'eraser') {
     makeActiveTool('eraser')
     isEraser = true;
+  }
+  if (element.id === 'stroke') {
+    makeActiveTool('stroke')
+    isStroke = true;
   }
 });
 
@@ -199,6 +205,28 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
+
+
+document.getElementById('canvas').addEventListener('mousedown',(event)=>{
+  if(isStroke){
+    ctx.strokeStyle = color;
+    const x = event.offsetX;
+    const y = event.offsetY;
+    ctx.beginPath();
+    ctx.moveTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
+    y / (parseInt(canvas.style.height, 10) / canvasSize));
+  }
+})
+document.getElementById('canvas').addEventListener('mouseup',(event)=>{
+  if(isStroke){
+    ctx.strokeStyle = color;
+    const x = event.offsetX;
+    const y = event.offsetY;
+    ctx.lineTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
+    y / (parseInt(canvas.style.height, 10) / canvasSize),1,1);
+    ctx.stroke();
+  }
+})
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());
