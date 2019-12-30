@@ -196,7 +196,7 @@ canvas{
     background: lightgrey;
 }
 
-#pencil:hover, #chooseColor:hover, #paintBucket:hover, #eraser:hover, #stroke:hover{
+#pencil:hover, #chooseColor:hover, #paintBucket:hover, #eraser:hover, #stroke:hover , #bucket:hover{
     cursor: pointer;
     background: lightgray;
 }

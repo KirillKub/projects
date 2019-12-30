@@ -29,21 +29,27 @@ function paintBucket(event){
         if (value2 === value) {
             ctx.fillRect(parseInt(xNow / (parseInt(canvas.style.width, 10) / canvasSize)),
             parseInt(yNow / (parseInt(canvas.style.height, 10) / canvasSize)), 1, 1);
-            if (xNow !== 512 && pixelMeet[`${+xNow + size} ${yNow}`] !== true) {
-                pixels.push([xNow + size, yNow]);
+            if (xNow !== canvasSize && pixelMeet[`${+xNow + size} ${yNow}`] !== true) {
+                pixels.push([+xNow + size, yNow]);
             }
             if (xNow !== 0 && pixelMeet[`${+xNow - size} ${yNow}`] !== true) {
-                pixels.push([xNow - size, yNow]);
+                pixels.push([+xNow - size, yNow]);
             }
-            if (yNow !== 512 && pixelMeet[`${xNow} ${+yNow + size}`] !== true) {
-                pixels.push([xNow, yNow + size]);
+            if (yNow !== canvasSize && pixelMeet[`${xNow} ${+yNow + size}`] !== true) {
+                pixels.push([xNow, +yNow + size]);
             }
-            if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow -size}`] !== true) {
-                pixels.push([xNow, yNow - size]);
+            if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow - size}`] !== true) {
+                pixels.push([xNow, +yNow - size]);
             }
         }
     }
     localStorage.setItem('canvas', canvas.toDataURL());
 }
 
-export { paintBucket }
+function fullBucket(color){
+    ctx.fillStyle = color;
+    ctx.fillRect(0,0,512,512);
+    localStorage.setItem('canvas', canvas.toDataURL());
+}
+
+export { paintBucket,fullBucket}

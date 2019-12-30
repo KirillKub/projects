@@ -32,4 +32,4 @@ function drawFrame(){
     ctx1.drawImage(img, 0, 0,128,128);
 }
 
-export {createFrame,drawFrame}
+export {createFrame,drawFrame,ctx1}

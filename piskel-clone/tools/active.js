@@ -4,6 +4,7 @@ function makeActiveTool(name){
     document.getElementById('chooseColor').classList.remove('active');
     document.getElementById('eraser').classList.remove('active');
     document.getElementById('stroke').classList.remove('active');
+    document.getElementById('bucket').classList.remove('active');
     document.getElementById(`${name}`).classList.add('active');
   }
 

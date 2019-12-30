@@ -1,6 +1,6 @@
 import { pressKeys } from './tools/checkKeys'
 import { swapSize, canvasSize, makeActiveSize } from './tools/size'
-import { paintBucket } from './canvas/paintBucket'
+import { paintBucket , fullBucket } from './canvas/paintBucket'
 import { chooseColor,colorHelp } from './tools/chooseColor'
 import { clearCanvas } from './canvas/clear'
 import { makeActiveTool} from './tools/active'
@@ -8,12 +8,14 @@ import {createFrame,drawFrame} from './frames/create';
 
 let canvasData;
 let ctxValue;
+let isBucket = false;
 let isPencil = false;
 let isDraw = false;
 let isPaintBucket = false;
 let isChooseColor = false;
 let isEraser = false;
 let isStroke = false;
+let isEraserDraw = false;
 let color = '#ff0000';
 const canvas = document.getElementById('canvas');
 canvas.style.width = '512px';
@@ -53,6 +55,7 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
   isPaintBucket = false;
   isEraser = false;
   isStroke = false;
+  isBucket = false;
   const { target } = event;
   const element = target.closest('div');
   if (element.className === 'main__items') { return; }
@@ -75,6 +78,10 @@ document.getElementById('mainItems').addEventListener('click', (event) => {
   if (element.id === 'stroke') {
     makeActiveTool('stroke')
     isStroke = true;
+  }
+  if (element.id === 'bucket') {
+    makeActiveTool('bucket')
+    isBucket = true;
   }
 });
 
@@ -166,42 +173,28 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   }
 });
 
-let isEraserDraw = false;
-
-document.getElementById('canvas').addEventListener('mousemove', (event) => {
-  if (isEraserDraw) {
-    const x = event.offsetX;
-    const y = event.offsetY;
-    ctx.lineWidth = 5;
-    ctx.lineTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
-    y / (parseInt(canvas.style.height, 10) / canvasSize),5,5);
-    ctx.stroke();
+document.getElementById('canvas').addEventListener('mousedown', (event) => {
+  if (isEraser) {
+    isEraserDraw = true;
   }
 });
 
+document.getElementById('canvas').addEventListener('mousemove', (event) => {
+  const x = event.offsetX;
+  const y = event.offsetY;
+  if (isEraserDraw) {
+    ctx.clearRect(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)), 1, 1);
+    localStorage.setItem('canvas', canvas.toDataURL());
+    drawFrame()
+  }
+})
+
 document.getElementById('canvas').addEventListener('mouseup', () => {
   isEraserDraw = false;
-  ctx.lineWidth = 1;
 });
 
 document.getElementById('canvas').addEventListener('mouseleave', () => {
   isEraserDraw = false;
-  ctx.lineWidth = 1;
-});
-
-document.getElementById('canvas').addEventListener('mousedown', (event) => {
-  if (isEraser) {
-    ctx.strokeStyle = 'lightgrey';
-    const x = event.offsetX;
-    const y = event.offsetY;
-    ctx.beginPath();
-    ctx.moveTo(x / (parseInt(canvas.style.width, 10) / canvasSize),
-  y / (parseInt(canvas.style.height, 10) / canvasSize));
-    ctx.fillStyle = 'lightgrey';
-    ctx.fillRect(x / (512 / canvasSize), y / (512 / canvasSize), 5, 5);
-    isEraserDraw = true;
-    localStorage.setItem('canvas', canvas.toDataURL());
-  }
 });
 
 let posX;
@@ -225,7 +218,7 @@ document.getElementById('canvas').addEventListener('mousemove',(event)=>{
       const img = new Image();
       img.crossOrigin = 'Anonymous';
       img.src = dataURL;
-      ctx.drawImage(img, 0, 0, 128, 128);
+      ctx.drawImage(img, 0, 0, canvasSize, canvasSize);
       ctx.beginPath();
       ctx.moveTo(parseInt(posX / (512 / canvasSize)),parseInt((posY / (512 / canvasSize))));
       ctx.lineTo(parseInt(x / (512 / canvasSize)), parseInt((y / (512 / canvasSize))));
@@ -290,16 +283,12 @@ document.getElementById('addFrames').addEventListener('click',(event)=>{
   }
 });
 
-document.getElementById('addFrames').addEventListener('mousemove',(event)=>{
-  // let target = event.target
-  // console.log(event.offsetY)
-  // target.closest('.frame').style.position = 'absolute';
-  // target.closest('.frame').style.top = `${event.offsetY}px`;
-});
-
-// setInterval(()=>{
-//   localStorage.setItem('canvas', canvas.toDataURL());
-// })
+document.getElementById('canvas').addEventListener('mousedown',()=>{
+  if(isBucket){
+    fullBucket(color);
+    drawFrame();
+  }
+})
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());
