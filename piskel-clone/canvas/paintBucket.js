@@ -3,10 +3,11 @@ import { canvasSize } from '../tools/size'
 import {rgbToHex } from '../color/rgbToHex'
 
 function paintBucket(event){
-    const x = event.offsetX;
-    const y = event.offsetY;
-    const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width, 10) / canvasSize),
-         y / (parseInt(canvas.style.height, 10) / canvasSize), 1, 1).data;
+    let size = parseInt(canvas.style.width) / canvasSize;
+    let x = event.offsetX;
+    let y = event.offsetY;
+    const colorPixel = ctx.getImageData(parseInt(x / (parseInt(canvas.style.width, 10) / canvasSize)),
+    parseInt(y / (parseInt(canvas.style.height, 10) / canvasSize)), 1, 1).data;
     const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
     const value = rgbToHex(rgb);
     const pixels = [];
@@ -21,23 +22,24 @@ function paintBucket(event){
             continue;
         }
         pixelMeet[`${xNow} ${yNow}`] = true;
-        const colorPixel2 = ctx.getImageData(xNow, yNow, 1, 1).data;
+        const colorPixel2 = ctx.getImageData(parseInt(xNow / (parseInt(canvas.style.width, 10) / canvasSize)),
+        parseInt(yNow / (parseInt(canvas.style.height, 10) / canvasSize)), 1, 1).data;
         const rgb2 = `rgb(${colorPixel2[0]}, ${colorPixel2[1]}, ${colorPixel2[2]})`;
         const value2 = rgbToHex(rgb2);
         if (value2 === value) {
-            ctx.fillRect(xNow / (parseInt(canvas.style.width, 10) / canvasSize),
-                yNow / (parseInt(canvas.style.height, 10) / canvasSize), 1, 1);
-            if (xNow !== 512 && pixelMeet[`${+xNow + +1} ${yNow}`] !== true) {
-                pixels.push([xNow + 1, yNow]);
+            ctx.fillRect(parseInt(xNow / (parseInt(canvas.style.width, 10) / canvasSize)),
+            parseInt(yNow / (parseInt(canvas.style.height, 10) / canvasSize)), 1, 1);
+            if (xNow !== 512 && pixelMeet[`${+xNow + size} ${yNow}`] !== true) {
+                pixels.push([xNow + size, yNow]);
             }
-            if (xNow !== 0 && pixelMeet[`${+xNow - +1} ${yNow}`] !== true) {
-                pixels.push([xNow - 1, yNow]);
+            if (xNow !== 0 && pixelMeet[`${+xNow - size} ${yNow}`] !== true) {
+                pixels.push([xNow - size, yNow]);
             }
-            if (yNow !== 512 && pixelMeet[`${xNow} ${+yNow + +1}`] !== true) {
-                pixels.push([xNow, yNow + 1]);
+            if (yNow !== 512 && pixelMeet[`${xNow} ${+yNow + size}`] !== true) {
+                pixels.push([xNow, yNow + size]);
             }
-            if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow - +1}`] !== true) {
-                pixels.push([xNow, yNow - 1]);
+            if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow -size}`] !== true) {
+                pixels.push([xNow, yNow - size]);
             }
         }
     }

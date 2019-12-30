@@ -10,10 +10,10 @@ function chooseColor(event){
       const colorPixel = ctx.getImageData(x / (parseInt(canvas.style.width, 10) / canvasSize),
         y / (parseInt(canvas.style.height, 10) / canvasSize), 1, 1).data;
       const rgb = `rgb(${colorPixel[0]}, ${colorPixel[1]}, ${colorPixel[2]})`;
-      document.getElementById('swapPrevColor').style.background = color;
-      let colorNow = rgbToHex(rgb);
-      document.getElementById('swapCurrentColor').style.background = colorNow;
-      document.getElementById('inputColor').value = colorNow;
+      let colorNow = rgbToHex(rgb); 
+      if(document.getElementById('primaryColor').classList.contains('active'))
+        document.getElementById('inputColorPrimary').value = colorNow;
+      else document.getElementById('inputColorSecondary').value = colorNow;   
       colorHelp = colorNow;
 }
 

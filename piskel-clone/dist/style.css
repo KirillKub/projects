@@ -131,7 +131,11 @@ input[type="color"]{
 
 .main__canvas{
     align-items: center;
-    margin:50px 90px 0 0;
+    margin:41px 90px 0 0;
+}
+
+#canvas{
+    image-rendering: pixelated;
 }
 
 .main__canvas button{
@@ -209,4 +213,32 @@ canvas{
     opacity: 0.4;
 }
 
+.duplicate{
+    right: 0;
+    bottom: 4px;
+    position: absolute;
+    opacity: 0;
+}
 
+.frame{
+  position: relative;
+}
+
+.delete{
+    right: 0;
+    position: absolute;
+    opacity: 0;
+}
+
+#addFrames{
+  margin-top: 79px;
+  position: relative;
+}
+
+.frame:hover .duplicate{
+  opacity: 1;
+}
+
+.frame:hover .delete{
+    opacity: 1;
+  }
