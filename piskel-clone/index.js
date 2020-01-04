@@ -5,7 +5,7 @@ import { chooseColor,colorHelp } from './tools/chooseColor'
 import { clearCanvas } from './canvas/clear'
 import { makeActiveTool} from './tools/active'
 import {createFrame,drawFrame,frameBox} from './frames/create';
-import { animation } from './frames/animation'
+import { animation, fullScreen} from './frames/animation'
 
 let canvasData;
 let ctxValue;
@@ -295,8 +295,10 @@ document.getElementById('canvas').addEventListener('mousedown',()=>{
   }
 })
 let fps = 12;
+document.getElementById('value').value = `12 fps`;
 let interval = 1000 / fps;
 let animate = setInterval(animation,interval);
+
 document.getElementById('range').addEventListener('input',()=>{
   document.getElementById('value').value = `${document.getElementById('range').value} fps`;
   fps = document.getElementById('range').value;
@@ -306,6 +308,8 @@ document.getElementById('range').addEventListener('input',()=>{
     animate = setInterval(animation,interval);
   }
 })
+
+document.getElementById('animation').addEventListener('click',fullScreen)
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());
