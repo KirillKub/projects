@@ -1,9 +1,11 @@
 import {ctxValue,canvasData} from '../index';
 
 let ctx1;
+let frameBox = [];
 function createFrame(){
     let canvas1 = document.createElement('canvas');
     ctx1 = canvas1.getContext('2d');
+    frameBox.push(canvas1);
     if(canvasData) ctx1 = canvasData;
     let div = document.createElement('div');
     let button = document.createElement('button');
@@ -13,6 +15,8 @@ function createFrame(){
     button.classList.add('duplicate')
     button2.textContent = 'delete'
     button2.classList.add('delete')
+    // if(frameBox.length > 1) frameBox.map(item => item.classList.remove('activeFrame'))
+    // canvas1.classList.add('activeFrame');
     canvas1.style.width = '128px';
     canvas1.style.height = '128px';
     canvas1.width = '128';
@@ -32,4 +36,4 @@ function drawFrame(){
     ctx1.drawImage(img, 0, 0,128,128);
 }
 
-export {createFrame,drawFrame,ctx1}
+export {createFrame,drawFrame,ctx1,frameBox}

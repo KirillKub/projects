@@ -4,7 +4,8 @@ import { paintBucket , fullBucket } from './canvas/paintBucket'
 import { chooseColor,colorHelp } from './tools/chooseColor'
 import { clearCanvas } from './canvas/clear'
 import { makeActiveTool} from './tools/active'
-import {createFrame,drawFrame} from './frames/create';
+import {createFrame,drawFrame,frameBox} from './frames/create';
+import { animation } from './frames/animation'
 
 let canvasData;
 let ctxValue;
@@ -105,6 +106,7 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
   }
 });
 
+
 document.getElementById('canvas').addEventListener('mouseup', () => {
   isDraw = false;
   localStorage.setItem('canvas', canvas.toDataURL());
@@ -113,6 +115,7 @@ document.getElementById('canvas').addEventListener('mouseup', () => {
 document.getElementById('canvas').addEventListener('mousemove', () => {
   drawFrame()
   ctxValue = null;
+  localStorage.setItem('canvas', canvas.toDataURL());
 });
 
 document.getElementById('canvas').addEventListener('mouseleave', () => {
@@ -239,7 +242,6 @@ document.getElementById('addNewFrame').addEventListener('click',()=>{
 });
 
 document.getElementById('addFrames').addEventListener('click', (event)=>{
-  clearCanvas();
   let target = event.target;
   if(target.closest('canvas')){
     ctxValue = target.getContext('2d');
@@ -248,7 +250,6 @@ document.getElementById('addFrames').addEventListener('click', (event)=>{
     img.crossOrigin = 'Anonymous';
     img.src = dataURL;
     img.onload = function load() {
-      ctx.strokeStyle = color;
       ctx.drawImage(img, 0, 0, 128, 128);
     };
   }
@@ -257,8 +258,10 @@ document.getElementById('addFrames').addEventListener('click', (event)=>{
 document.getElementById('addFrames').addEventListener('click',(event)=>{
   let target = event.target
   if(target.classList.contains('delete')){
+    frameBox.splice(frameBox.filter(item => item.getContext('2d') === target.previousSibling.previousSibling.getContext('2d')),1);
     target.closest('.frame').style.display = 'none'
-    const dataURL = document.getElementsByTagName('canvas')[0].toDataURL()
+    const dataURL = document.getElementsByTagName('canvas')[0].toDataURL();
+    ctxValue = document.getElementsByTagName('canvas')[0].getContext('2d');
     const img = new Image();
     img.crossOrigin = 'Anonymous';
     img.src = dataURL;
@@ -266,10 +269,10 @@ document.getElementById('addFrames').addEventListener('click',(event)=>{
       ctx.strokeStyle = color;
       ctx.drawImage(img, 0, 0, 128, 128);
     };
+    drawFrame()
   }
   if(target.classList.contains('duplicate')){
     createFrame()
-    drawFrame()
     const dataURL = target.previousSibling.toDataURL()
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -278,6 +281,8 @@ document.getElementById('addFrames').addEventListener('click',(event)=>{
       ctx.strokeStyle = color;
       ctx.drawImage(img, 0, 0, 128, 128);
     };
+    localStorage.setItem('canvas', canvas.toDataURL());
+    drawFrame()
     ctxValue = null;
     canvasData = null;
   }
@@ -289,6 +294,13 @@ document.getElementById('canvas').addEventListener('mousedown',()=>{
     drawFrame();
   }
 })
+
+document.getElementById('animation').addEventListener('click', ()=>{
+  let fps = 12;
+  let interval = 1000 / fps;
+  setInterval(animation,interval);
+})
+
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());

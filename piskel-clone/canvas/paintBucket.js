@@ -29,13 +29,13 @@ function paintBucket(event){
         if (value2 === value) {
             ctx.fillRect(parseInt(xNow / (parseInt(canvas.style.width, 10) / canvasSize)),
             parseInt(yNow / (parseInt(canvas.style.height, 10) / canvasSize)), 1, 1);
-            if (xNow !== canvasSize && pixelMeet[`${+xNow + size} ${yNow}`] !== true) {
+            if (xNow !== 512 && pixelMeet[`${+xNow + size} ${yNow}`] !== true) {
                 pixels.push([+xNow + size, yNow]);
             }
             if (xNow !== 0 && pixelMeet[`${+xNow - size} ${yNow}`] !== true) {
                 pixels.push([+xNow - size, yNow]);
             }
-            if (yNow !== canvasSize && pixelMeet[`${xNow} ${+yNow + size}`] !== true) {
+            if (yNow !== 512 && pixelMeet[`${xNow} ${+yNow + size}`] !== true) {
                 pixels.push([xNow, +yNow + size]);
             }
             if (yNow !== 0 && pixelMeet[`${xNow} ${+yNow - size}`] !== true) {

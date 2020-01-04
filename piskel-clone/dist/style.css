@@ -131,7 +131,7 @@ input[type="color"]{
 
 .main__canvas{
     align-items: center;
-    margin:41px 90px 0 0;
+    margin:41px 10px 0 0;
 }
 
 #canvas{
@@ -224,6 +224,10 @@ canvas{
   position: relative;
 }
 
+.activeFrame{
+    border:3px solid green;
+}
+
 .delete{
     right: 0;
     position: absolute;
@@ -242,3 +246,9 @@ canvas{
 .frame:hover .delete{
     opacity: 1;
   }
+
+#animation{
+    margin-top: 79px;
+    width: 256px;
+    height: 256px;
+}
