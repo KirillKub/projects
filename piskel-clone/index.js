@@ -294,13 +294,18 @@ document.getElementById('canvas').addEventListener('mousedown',()=>{
     drawFrame();
   }
 })
-
-document.getElementById('animation').addEventListener('click', ()=>{
-  let fps = 12;
-  let interval = 1000 / fps;
-  setInterval(animation,interval);
+let fps = 12;
+let interval = 1000 / fps;
+let animate = setInterval(animation,interval);
+document.getElementById('range').addEventListener('input',()=>{
+  document.getElementById('value').value = `${document.getElementById('range').value} fps`;
+  fps = document.getElementById('range').value;
+  interval = 1000 / fps;
+  clearInterval(animate);
+  if(fps != 0){
+    animate = setInterval(animation,interval);
+  }
 })
-
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());

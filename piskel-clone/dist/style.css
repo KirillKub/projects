@@ -252,3 +252,15 @@ canvas{
     width: 256px;
     height: 256px;
 }
+
+.range{
+    display: flex;
+}
+
+#range{
+    width: 192px;
+}
+
+#value{
+    width: 64px;
+}
