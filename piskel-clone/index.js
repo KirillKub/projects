@@ -6,6 +6,9 @@ import { clearCanvas } from './canvas/clear'
 import { makeActiveTool} from './tools/active'
 import {createFrame,drawFrame,frameBox} from './frames/create';
 import { animation, fullScreen} from './frames/animation'
+import { } from './frames/GIFEncoder'
+import { } from './frames/LZWEncoder'
+import { } from './frames/NeuQuant'
 
 let canvasData;
 let ctxValue;
@@ -310,6 +313,18 @@ document.getElementById('range').addEventListener('input',()=>{
 })
 
 document.getElementById('animation').addEventListener('click',fullScreen)
+
+document.getElementById('gif').addEventListener('click',()=>{
+  let encoder = new GIFEncoder();
+  encoder.setRepeat(0);
+  encoder.setDelay(interval);
+  encoder.start();
+  for(let i = 0; i < frameBox.length; i++){
+      encoder.addFrame(frameBox[i].getContext('2d'));
+  }
+  encoder.finish();
+  encoder.download("picture.gif");
+})
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());

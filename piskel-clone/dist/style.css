@@ -264,3 +264,8 @@ canvas{
 #value{
     width: 64px;
 }
+
+#gif:hover, #png:hover{
+    cursor: pointer;
+    background: gray;
+}
