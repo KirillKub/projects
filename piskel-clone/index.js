@@ -9,6 +9,9 @@ import { animation, fullScreen} from './frames/animation'
 import { } from './frames/GIFEncoder'
 import { } from './frames/LZWEncoder'
 import { } from './frames/NeuQuant'
+import { } from './frames/apng-canvas.min.js';
+const UPNG = require('upng-js');
+const download = require('downloadjs');
 
 let canvasData;
 let ctxValue;
@@ -323,7 +326,29 @@ document.getElementById('gif').addEventListener('click',()=>{
       encoder.addFrame(frameBox[i].getContext('2d'));
   }
   encoder.finish();
-  encoder.download("picture.gif");
+  encoder.download("picture");
+})
+
+document.getElementById('apng').addEventListener('click',()=>{
+  let wait = Array.of(frameBox.length).fill(interval)
+  let img = UPNG.encode(frameBox,512,512,0,wait)
+  download(img,'picture.apng','apng')
+})
+
+// document.getElementById('login').addEventListener('click', ()=>{
+//   window.location = 'https://oauth.vk.com/authorize?client_id=7270443&display=popup&redirect_uri=http://127.0.0.1:5500/kirillkub-RS2019Q3/piskel-clone/dist/index.html&scope=friends&response_type=code&v=5.103'
+// })
+
+// setTimeout(()=>{
+//   let strGET = window.location.search.replace( '?code=', '');
+//   let x = fetch(`https://oauth.vk.com/access_token?client_id=7270443&client_secret=p1cfXcpXLKpJlJrJFsYA&redirect_uri=http://127.0.0.1:5500/kirillkub-RS2019Q3/piskel-clone/dist/index.html&code=${strGET}`)
+//   console.log(x);
+// },4000) 
+
+document.getElementById('apng').addEventListener('click',()=>{
+  APNG.ifNeeded().then(function() {
+    for (var i = 0; i < frameBox.length; i++) APNG.animateImage(frameBox[i]);
+});
 })
 
 window.onunload = () => {

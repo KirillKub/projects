@@ -265,7 +265,7 @@ canvas{
     width: 64px;
 }
 
-#gif:hover, #png:hover{
+#gif:hover, #apng:hover{
     cursor: pointer;
     background: gray;
 }

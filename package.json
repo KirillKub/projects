@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "dependencies": {
-    "@babel/preset-env": "^7.7.7"
+    "@babel/preset-env": "^7.7.7",
+    "downloadjs": "^1.4.7",
+    "upng-js": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
