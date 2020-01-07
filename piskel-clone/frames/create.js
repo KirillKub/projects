@@ -1,4 +1,4 @@
-import {ctxValue,canvasData} from '../index';
+import {ctxValue} from './actions'
 
 let ctx1;
 let frameBox = [];
@@ -6,7 +6,6 @@ function createFrame(){
     let canvas1 = document.createElement('canvas');
     ctx1 = canvas1.getContext('2d');
     frameBox.push(canvas1);
-    if(canvasData) ctx1 = canvasData;
     let div = document.createElement('div');
     let button = document.createElement('button');
     let button2 = document.createElement('button');

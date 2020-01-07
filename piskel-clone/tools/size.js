@@ -12,7 +12,7 @@ function swapSize(size){
     img.crossOrigin = 'Anonymous';
     img.src = dataURL;
     img.onload = function load() {
-      ctx.drawImage(img, 0, 0, 512 / (512 / canvasSize), 512 / (512 / canvasSize));
+      ctx.drawImage(img, 0, 0, canvasSize,canvasSize);
     };
   }
 
@@ -22,4 +22,19 @@ function swapSize(size){
     document.getElementById('size128').classList.remove('active');
     document.getElementById(`size${size}`).classList.add('active');
   }
-  export { swapSize,canvasSize,makeActiveSize }
+
+function size(event){
+    const { target } = event;
+    if (target.id === 'size32') {
+      swapSize(32)
+    }
+    if (target.id === 'size64') {
+      swapSize(64)
+    }
+    if (target.id === 'size128') {
+      swapSize(128)
+    }
+  }
+
+
+  export { size,canvasSize,makeActiveSize }

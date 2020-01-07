@@ -1,34 +1,33 @@
 import { pressKeys } from './tools/checkKeys'
-import { swapSize, canvasSize, makeActiveSize } from './tools/size'
+import { size, canvasSize, makeActiveSize } from './tools/size'
 import { paintBucket , fullBucket } from './canvas/paintBucket'
 import { chooseColor,colorHelp } from './tools/chooseColor'
 import { clearCanvas } from './canvas/clear'
-import { makeActiveTool} from './tools/active'
+import { activeTool} from './tools/active'
 import {createFrame,drawFrame,frameBox} from './frames/create';
-import { animation, fullScreen} from './frames/animation'
-import { } from './frames/GIFEncoder'
-import { } from './frames/LZWEncoder'
-import { } from './frames/NeuQuant'
-import { } from './frames/apng-canvas.min.js';
-const UPNG = require('upng-js');
-const download = require('downloadjs');
+import { animation, fullScreen , saveAsGif,saveAsApng} from './frames/animation'
+import { swapFrame, deleteFrame, duplicateFrame } from '../piskel-clone/frames/actions'
 
-let canvasData;
-let ctxValue;
-let isBucket = false;
-let isPencil = false;
+let tool = {
+  pencil:false,
+  chooseColor:false,
+  paintBucket: false,
+  eraser: false,
+  stroke: false,
+  bucket: false,
+  }
 let isDraw = false;
-let isPaintBucket = false;
-let isChooseColor = false;
-let isEraser = false;
-let isStroke = false;
 let isEraserDraw = false;
+let isStrokeDown = false;
 let color = '#ff0000';
 const canvas = document.getElementById('canvas');
 canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
+let fps = 12;
+let interval = 1000 / fps;
+let animate = setInterval(animation,interval);
 createFrame()
 drawFrame()
 
@@ -43,57 +42,62 @@ if (localStorage.getItem('canvas')) {
   };
 }
 
-document.getElementById('size').addEventListener('click', (event) => {
-  const { target } = event;
-  if (target.id === 'size32') {
-    swapSize(32)
-  }
-  if (target.id === 'size64') {
-    swapSize(64)
-  }
-  if (target.id === 'size128') {
-    swapSize(128)
-  }
-});
+document.getElementById('size').addEventListener('click', size);
 
-document.getElementById('mainItems').addEventListener('click', (event) => {
-  isPencil = false;
-  isChooseColor = false;
-  isPaintBucket = false;
-  isEraser = false;
-  isStroke = false;
-  isBucket = false;
-  const { target } = event;
-  const element = target.closest('div');
-  if (element.className === 'main__items') { return; }
-  if (element.id === 'pencil') {
-    makeActiveTool('pencil')
-    isPencil = true;
-  }
-  if (element.id === 'paintBucket') {
-    makeActiveTool('paintBucket')
-    isPaintBucket = true;
-  }
-  if (element.id === 'chooseColor') {
-    makeActiveTool('chooseColor')
-    isChooseColor = true;
-  }
-  if (element.id === 'eraser') {
-    makeActiveTool('eraser')
-    isEraser = true;
-  }
-  if (element.id === 'stroke') {
-    makeActiveTool('stroke')
-    isStroke = true;
-  }
-  if (element.id === 'bucket') {
-    makeActiveTool('bucket')
-    isBucket = true;
-  }
-});
+document.getElementById('mainItems').addEventListener('click', activeTool);
+
+// let oldX = null
+// let oldY = null
+
+
+// canvas.addEventListener('mousemove', function(e) {
+//   if (!(e.buttons & 1)) {
+//     oldX = oldY = null;
+//     return;
+//   }
+//   let
+//     x = parseInt(e.offsetX / (512 / canvasSize)),
+//     y = parseInt(e.offsetY / (512 / canvasSize));
+//   if (oldX !== null) {
+//     getLineCoord({ x, y }, { x: oldX, y: oldY }).forEach(({ x, y }) => {
+//       ctx.beginPath();
+//       ctx.arc(x, y, 1, 0, 2 * Math.PI, false);
+//       ctx.fill();
+//     });
+//   }
+//   oldX = x;
+//   oldY = y;
+// });
+
+// function getLineCoord(p0, p1) {
+//   let
+//     { x, y } = p0,
+//     dx = Math.abs(x - p1.x),
+//     dy = Math.abs(y - p1.y),
+//     sx = (x < p1.x) ? 1 : -1,
+//     sy = (y < p1.y) ? 1 : -1,
+//     error = dx - dy,
+//     coord = [];
+//   while (true) {
+//     coord.push({ x, y });
+//     if ((x === p1.x) && (y === p1.y)) {
+//       break;
+//     }
+//     const e2 = error * 2;
+//     if (e2 > -dy) {
+//       error -= dy;
+//       x += sx;
+//     }
+//     if (e2 < dx) {
+//       error += dx;
+//       y += sy;
+//     }
+//   }
+//   return coord;
+// }
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
-  if (isPencil) {
+  if (tool.pencil) {
     ctx.strokeStyle = color;
     ctx.beginPath();
     const x = event.offsetX;
@@ -108,29 +112,13 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
     const x = event.offsetX;
     const y = event.offsetY;
     ctx.lineTo(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)))
+    // ctx.fillRect(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)), 1, 1);
     ctx.stroke();
   }
 });
 
-
-document.getElementById('canvas').addEventListener('mouseup', () => {
-  isDraw = false;
-  localStorage.setItem('canvas', canvas.toDataURL());
-});
-
-document.getElementById('canvas').addEventListener('mousemove', () => {
-  drawFrame()
-  ctxValue = null;
-  localStorage.setItem('canvas', canvas.toDataURL());
-});
-
-document.getElementById('canvas').addEventListener('mouseleave', () => {
-  isDraw = false;
-  localStorage.setItem('canvas', canvas.toDataURL());
-});
-
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
-  if (isPencil) {
+  if (tool.pencil) {
     const x = event.offsetX;
     const y = event.offsetY;
     ctx.strokeStyle = color;
@@ -138,6 +126,23 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     ctx.fillRect(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)), 1, 1);
     localStorage.setItem('canvas', canvas.toDataURL());
   }
+});
+
+document.getElementById('canvas').addEventListener('mouseup', () => {
+  isDraw = false;
+  isEraserDraw = false;
+  localStorage.setItem('canvas', canvas.toDataURL());
+});
+
+document.getElementById('canvas').addEventListener('mousemove', () => {
+  if(!isStrokeDown) drawFrame()
+  localStorage.setItem('canvas', canvas.toDataURL());
+});
+
+document.getElementById('canvas').addEventListener('mouseleave', () => {
+  isDraw = false;
+  isEraserDraw = false;
+  localStorage.setItem('canvas', canvas.toDataURL());
 });
 
 document.addEventListener('keydown', pressKeys);
@@ -162,7 +167,7 @@ document.getElementById('mainColors').addEventListener('click', (event) => {
 });
 
 document.getElementById('canvas').addEventListener('click', (event) => {
-  if (isChooseColor) {
+  if (tool.chooseColor) {
     chooseColor(event);
     color = colorHelp;
   }
@@ -177,13 +182,13 @@ document.getElementById('inputColorSecondary').addEventListener('input', () => {
 })
 
 document.getElementById('canvas').addEventListener('click', (event) => {
-  if (isPaintBucket) {
+  if (tool.paintBucket) {
     paintBucket(event);
   }
 });
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
-  if (isEraser) {
+  if (tool.eraser) {
     isEraserDraw = true;
   }
 });
@@ -198,46 +203,24 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
   }
 })
 
-document.getElementById('canvas').addEventListener('mouseup', () => {
-  isEraserDraw = false;
-});
-
-document.getElementById('canvas').addEventListener('mouseleave', () => {
-  isEraserDraw = false;
-});
-
-let posX;
-let posY;
-let isStrokeDown = false;
 document.getElementById('canvas').addEventListener('mousedown',(event)=>{
-  if(isStroke){
-    posX = event.offsetX;
-    posY = event.offsetY;
+  if(tool.stroke){
+    const x  = event.offsetX;
+    const y  = event.offsetY;
     isStrokeDown = true;
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(parseInt(x / (512 / canvasSize)),parseInt((y / (512 / canvasSize))));
   }
 })
 
-document.getElementById('canvas').addEventListener('mousemove',(event)=>{
+document.getElementById('canvas').addEventListener('mouseup',(event)=>{
   const x = event.offsetX;
   const y = event.offsetY;
-  if(isStrokeDown) {
-      ctx.strokeStyle = color;
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      const dataURL = localStorage.getItem('canvas');
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.src = dataURL;
-      ctx.drawImage(img, 0, 0, canvasSize, canvasSize);
-      ctx.beginPath();
-      ctx.moveTo(parseInt(posX / (512 / canvasSize)),parseInt((posY / (512 / canvasSize))));
-      ctx.lineTo(parseInt(x / (512 / canvasSize)), parseInt((y / (512 / canvasSize))));
-      ctx.stroke();
-  }
-});
-
-document.getElementById('canvas').addEventListener('mouseup',(event)=>{
-  if(isStroke){
+  if(tool.stroke){
     isStrokeDown = false;
+    ctx.lineTo(parseInt(x / (512 / canvasSize)), parseInt((y / (512 / canvasSize))));
+    ctx.stroke();
   }
 })
 
@@ -247,63 +230,17 @@ document.getElementById('addNewFrame').addEventListener('click',()=>{
   localStorage.setItem('canvas', canvas.toDataURL());
 });
 
-document.getElementById('addFrames').addEventListener('click', (event)=>{
-  let target = event.target;
-  if(target.closest('canvas')){
-    ctxValue = target.getContext('2d');
-    const dataURL = target.toDataURL()
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.src = dataURL;
-    img.onload = function load() {
-      ctx.drawImage(img, 0, 0, 128, 128);
-    };
-  }
-})
+document.getElementById('addFrames').addEventListener('click', swapFrame)
+document.getElementById('addFrames').addEventListener('click', deleteFrame)
+document.getElementById('addFrames').addEventListener('click', duplicateFrame)
 
-document.getElementById('addFrames').addEventListener('click',(event)=>{
-  let target = event.target
-  if(target.classList.contains('delete')){
-    frameBox.splice(frameBox.filter(item => item.getContext('2d') === target.previousSibling.previousSibling.getContext('2d')),1);
-    target.closest('.frame').style.display = 'none'
-    const dataURL = document.getElementsByTagName('canvas')[0].toDataURL();
-    ctxValue = document.getElementsByTagName('canvas')[0].getContext('2d');
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.src = dataURL;
-    img.onload = function load() {
-      ctx.strokeStyle = color;
-      ctx.drawImage(img, 0, 0, 128, 128);
-    };
-    drawFrame()
-  }
-  if(target.classList.contains('duplicate')){
-    createFrame()
-    const dataURL = target.previousSibling.toDataURL()
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.src = dataURL;
-    img.onload = function load() {
-      ctx.strokeStyle = color;
-      ctx.drawImage(img, 0, 0, 128, 128);
-    };
-    localStorage.setItem('canvas', canvas.toDataURL());
-    drawFrame()
-    ctxValue = null;
-    canvasData = null;
-  }
-});
 
 document.getElementById('canvas').addEventListener('mousedown',()=>{
-  if(isBucket){
+  if(tool.bucket){
     fullBucket(color);
     drawFrame();
   }
 })
-let fps = 12;
-document.getElementById('value').value = `12 fps`;
-let interval = 1000 / fps;
-let animate = setInterval(animation,interval);
 
 document.getElementById('range').addEventListener('input',()=>{
   document.getElementById('value').value = `${document.getElementById('range').value} fps`;
@@ -316,43 +253,11 @@ document.getElementById('range').addEventListener('input',()=>{
 })
 
 document.getElementById('animation').addEventListener('click',fullScreen)
-
-document.getElementById('gif').addEventListener('click',()=>{
-  let encoder = new GIFEncoder();
-  encoder.setRepeat(0);
-  encoder.setDelay(interval);
-  encoder.start();
-  for(let i = 0; i < frameBox.length; i++){
-      encoder.addFrame(frameBox[i].getContext('2d'));
-  }
-  encoder.finish();
-  encoder.download("picture");
-})
-
-document.getElementById('apng').addEventListener('click',()=>{
-  let wait = Array.of(frameBox.length).fill(interval)
-  let img = UPNG.encode(frameBox,512,512,0,wait)
-  download(img,'picture.apng','apng')
-})
-
-// document.getElementById('login').addEventListener('click', ()=>{
-//   window.location = 'https://oauth.vk.com/authorize?client_id=7270443&display=popup&redirect_uri=http://127.0.0.1:5500/kirillkub-RS2019Q3/piskel-clone/dist/index.html&scope=friends&response_type=code&v=5.103'
-// })
-
-// setTimeout(()=>{
-//   let strGET = window.location.search.replace( '?code=', '');
-//   let x = fetch(`https://oauth.vk.com/access_token?client_id=7270443&client_secret=p1cfXcpXLKpJlJrJFsYA&redirect_uri=http://127.0.0.1:5500/kirillkub-RS2019Q3/piskel-clone/dist/index.html&code=${strGET}`)
-//   console.log(x);
-// },4000) 
-
-document.getElementById('apng').addEventListener('click',()=>{
-  APNG.ifNeeded().then(function() {
-    for (var i = 0; i < frameBox.length; i++) APNG.animateImage(frameBox[i]);
-});
-})
+document.getElementById('gif').addEventListener('click',saveAsGif)
+document.getElementById('apng').addEventListener('click', saveAsApng)
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());
 };
 
-export {color, ctx, ctxValue,canvasData}
+export {color, ctx , interval, tool }

@@ -1,3 +1,5 @@
+import {tool} from '../index';
+
 function makeActiveTool(name){
     document.getElementById('pencil').classList.remove('active');
     document.getElementById('paintBucket').classList.remove('active');
@@ -8,4 +10,40 @@ function makeActiveTool(name){
     document.getElementById(`${name}`).classList.add('active');
   }
 
-  export{makeActiveTool}
+function activeTool(event){
+  const { target } = event;
+  const element = target.closest('div');
+  tool.pencil = false;
+  tool.chooseColor = false;
+  tool.paintBucket = false;
+  tool.eraser = false;
+  tool.stroke = false;
+  tool.bucket = false;
+  if (element.className === 'main__items') { return; }
+  if (element.id === 'pencil') {
+    makeActiveTool('pencil')
+    tool.pencil = true;
+  }
+  if (element.id === 'paintBucket') {
+    makeActiveTool('paintBucket')
+    tool.paintBucket = true;
+  }
+  if (element.id === 'chooseColor') {
+    makeActiveTool('chooseColor')
+    tool.chooseColor = true;
+  }
+  if (element.id === 'eraser') {
+    makeActiveTool('eraser')
+    tool.eraser = true;
+  }
+  if (element.id === 'stroke') {
+    makeActiveTool('stroke')
+    tool.stroke = true;
+  }
+  if (element.id === 'bucket') {
+    makeActiveTool('bucket')
+    tool.bucket = true;
+  }
+}
+
+  export{activeTool}
