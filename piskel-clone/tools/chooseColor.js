@@ -1,4 +1,4 @@
-import { rgbToHex } from '../color/rgbToHex';
+import rgbToHex from '../color/rgbToHex';
 import { ctx } from '../index';
 import { canvasSize } from './size';
 

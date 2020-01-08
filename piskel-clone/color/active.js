@@ -9,12 +9,13 @@ function colorActive(event) {
   if (element.className === 'main__colors') {
     return;
   }
-  element.classList.add('active');
   if (element.id === 'primaryColor') {
+    element.classList.add('active');
     document.getElementById('secondaryColor').classList.remove('active');
     color = document.getElementById('inputColorPrimary').value;
   }
   if (element.id === 'secondaryColor') {
+    element.classList.add('active');
     document.getElementById('primaryColor').classList.remove('active');
     color = document.getElementById('inputColorSecondary').value;
   }

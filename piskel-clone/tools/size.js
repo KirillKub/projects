@@ -1,27 +1,29 @@
 import { ctx } from '../index';
+import clearCanvas from '../canvas/clear';
 
 let canvasSize = 128;
 
-function makeActiveSize(size) {
+function makeActiveSize(sizeNow) {
   document.getElementById('size32').classList.remove('active');
   document.getElementById('size64').classList.remove('active');
   document.getElementById('size128').classList.remove('active');
-  document.getElementById(`size${size}`).classList.add('active');
+  document.getElementById(`size${sizeNow}`).classList.add('active');
 }
 
-function swapSize(size) {
+function swapSize(sizeSwap) {
   const canvas = document.getElementById('canvas');
-  canvasSize = size;
-  canvas.height = size;
-  canvas.width = size;
-  makeActiveSize(size);
-  const dataURL = localStorage.getItem('canvas');
+  canvasSize = sizeSwap;
+  canvas.height = sizeSwap;
+  canvas.width = sizeSwap;
+  makeActiveSize(sizeSwap);
+  const dataURL = canvas;
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.src = dataURL;
   img.onload = function load() {
     ctx.drawImage(img, 0, 0, canvasSize, canvasSize);
   };
+  clearCanvas();
 }
 
 function size(event) {
@@ -37,5 +39,22 @@ function size(event) {
   }
 }
 
+function penSize(event) {
+  const { target } = event;
+  if (target.id === 'size1') {
+    ctx.lineWidth = 1;
+  }
+  if (target.id === 'size2') {
+    ctx.lineWidth = 2;
+  }
+  if (target.id === 'size3') {
+    ctx.lineWidth = 3;
+  }
+  if (target.id === 'size4') {
+    ctx.lineWidth = 4;
+  }
+}
 
-export { size, canvasSize, makeActiveSize };
+export {
+  size, canvasSize, makeActiveSize, penSize,
+};

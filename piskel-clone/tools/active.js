@@ -19,7 +19,6 @@ function makeActiveTool(name) {
 }
 
 function activeTool(event) {
-  const x = event;
   const { target } = event;
   const element = target.closest('div');
   tool.pencil = false;

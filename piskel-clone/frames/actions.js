@@ -2,6 +2,7 @@ import { ctx } from '../index';
 import { frameBox, drawFrame, createFrame } from './create';
 
 let ctxValue;
+const frameCanvasSize = 128;
 
 function swapFrame(event) {
   const { target } = event;
@@ -12,7 +13,7 @@ function swapFrame(event) {
     img.crossOrigin = 'Anonymous';
     img.src = dataURL;
     img.onload = function load() {
-      ctx.drawImage(img, 0, 0, 128, 128);
+      ctx.drawImage(img, 0, 0, frameCanvasSize, frameCanvasSize);
     };
   }
 }
@@ -25,6 +26,7 @@ function deleteFrame(event) {
       if (item.getContext('2d') === target.previousSibling.previousSibling.getContext('2d')) {
         index = i;
       }
+      return index;
     });
     frameBox.splice(index, 1);
     target.closest('.frame').style.display = 'none';
@@ -38,7 +40,7 @@ function deleteFrame(event) {
     img.crossOrigin = 'Anonymous';
     img.src = dataURL;
     img.onload = function load() {
-      ctx.drawImage(img, 0, 0, 128, 128);
+      ctx.drawImage(img, 0, 0, frameCanvasSize, frameCanvasSize);
     };
     drawFrame();
   }
@@ -53,7 +55,7 @@ function duplicateFrame(event) {
     img.crossOrigin = 'Anonymous';
     img.src = dataURL;
     img.onload = function load() {
-      ctx.drawImage(img, 0, 0, 128, 128);
+      ctx.drawImage(img, 0, 0, frameCanvasSize, frameCanvasSize);
     };
     localStorage.setItem('canvas', target.previousSibling.toDataURL());
     drawFrame();

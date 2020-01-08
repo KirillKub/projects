@@ -1,6 +1,21 @@
 import { tool } from './active';
 import { key } from './swapKeys';
 
+function clear() {
+  tool.pencil = false;
+  tool.chooseColor = false;
+  tool.paintBucket = false;
+  tool.eraser = false;
+  tool.stroke = false;
+  tool.bucket = false;
+  document.getElementById('paintBucket').classList.remove('active');
+  document.getElementById('chooseColor').classList.remove('active');
+  document.getElementById('pencil').classList.remove('active');
+  document.getElementById('stroke').classList.remove('active');
+  document.getElementById('eraser').classList.remove('active');
+  document.getElementById('bucket').classList.remove('active');
+}
+
 function pressKeys(event) {
   if (event.code === key.paintBucket) {
     clear();
@@ -34,19 +49,4 @@ function pressKeys(event) {
   }
 }
 
-function clear() {
-  tool.pencil = false;
-  tool.chooseColor = false;
-  tool.paintBucket = false;
-  tool.eraser = false;
-  tool.stroke = false;
-  tool.bucket = false;
-  document.getElementById('paintBucket').classList.remove('active');
-  document.getElementById('chooseColor').classList.remove('active');
-  document.getElementById('pencil').classList.remove('active');
-  document.getElementById('stroke').classList.remove('active');
-  document.getElementById('eraser').classList.remove('active');
-  document.getElementById('bucket').classList.remove('active');
-}
-
-export { pressKeys };
+export { pressKeys, clear };

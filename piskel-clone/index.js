@@ -1,16 +1,22 @@
 import { pressKeys } from './tools/checkKeys';
-import { size, canvasSize, makeActiveSize } from './tools/size';
+import { size, canvasSize, penSize } from './tools/size';
 import { paintBucket, fullBucket } from './canvas/paintBucket';
-import { clearCanvas } from './canvas/clear';
+import clearCanvas from './canvas/clear';
 import { activeTool, tool } from './tools/active';
-import { createFrame, drawFrame } from './frames/create';
+import { createFrame, drawFrame, frameBox } from './frames/create';
 import {
-  animation, fullScreen, saveAsGif, saveAsApng,
+  fullScreen, saveAsGif, saveAsApng,
 } from './frames/animation';
 import { swapFrame, deleteFrame, duplicateFrame } from './frames/actions';
-import { colorActive, color, colorPrimary, colorSecondary, swapColor } from './color/active';
+import {
+  colorActive, color, colorPrimary, colorSecondary, swapColor,
+} from './color/active';
 import { swapKeys } from './tools/swapKeys';
+import { swapFps } from './frames/interval';
+import signIn from './signIn/signIn';
 
+const canvasWidth = 512;
+const canvasHeight = 512;
 let isDraw = false;
 let isEraserDraw = false;
 let isStrokeDown = false;
@@ -19,9 +25,6 @@ canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
-let fps = 12;
-let interval = 1000 / fps;
-let animate = setInterval(animation, interval);
 createFrame();
 drawFrame();
 
@@ -36,11 +39,15 @@ if (localStorage.getItem('canvas')) {
   };
 }
 
-document.getElementById('keys').addEventListener('click', () => {
-  document.getElementById('swapKeys').style.display = 'block'
-})
+document.getElementById('login').addEventListener('click', signIn);
 
-document.getElementById('continue').addEventListener('click',swapKeys);
+document.getElementById('changeSize').addEventListener('click', penSize);
+
+document.getElementById('keys').addEventListener('click', () => {
+  document.getElementById('swapKeys').style.display = 'block';
+});
+
+document.getElementById('continue').addEventListener('click', swapKeys);
 
 document.getElementById('canvas').addEventListener('mousedown', (event) => {
   if (tool.pencil) {
@@ -48,7 +55,7 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     ctx.beginPath();
     const x = event.offsetX;
     const y = event.offsetY;
-    ctx.moveTo(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)));
+    ctx.moveTo(parseInt(x / (canvasWidth / canvasSize)), parseInt(y / (canvasHeight / canvasSize)));
     isDraw = true;
   }
 });
@@ -57,7 +64,7 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
   if (isDraw) {
     const x = event.offsetX;
     const y = event.offsetY;
-    ctx.lineTo(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)));
+    ctx.lineTo(parseInt(x / (canvasWidth / canvasSize)), parseInt(y / (canvasHeight / canvasSize)));
     ctx.stroke();
   }
 });
@@ -68,7 +75,8 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     const y = event.offsetY;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.fillRect(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)), 1, 1);
+    ctx.fillRect(parseInt(x / (canvasWidth / canvasSize)),
+      parseInt(y / (canvasHeight / canvasSize)), 1, 1);
     localStorage.setItem('canvas', canvas.toDataURL());
   }
 });
@@ -96,7 +104,7 @@ document.getElementById('canvas').addEventListener('click', (event) => {
   }
 });
 
-document.getElementById('canvas').addEventListener('mousedown', (event) => {
+document.getElementById('canvas').addEventListener('mousedown', () => {
   if (tool.eraser) {
     isEraserDraw = true;
   }
@@ -106,7 +114,8 @@ document.getElementById('canvas').addEventListener('mousemove', (event) => {
   const x = event.offsetX;
   const y = event.offsetY;
   if (isEraserDraw) {
-    ctx.clearRect(parseInt(x / (512 / canvasSize)), parseInt(y / (512 / canvasSize)), 1, 1);
+    ctx.clearRect(parseInt(x / (canvasWidth / canvasSize)),
+      parseInt(y / (canvasHeight / canvasSize)), 1, 1);
     localStorage.setItem('canvas', canvas.toDataURL());
     drawFrame();
   }
@@ -119,7 +128,8 @@ document.getElementById('canvas').addEventListener('mousedown', (event) => {
     isStrokeDown = true;
     ctx.strokeStyle = color;
     ctx.beginPath();
-    ctx.moveTo(parseInt(x / (512 / canvasSize)), parseInt((y / (512 / canvasSize))));
+    ctx.moveTo(parseInt(x / (canvasWidth / canvasSize)),
+      parseInt((y / (canvasHeight / canvasSize))));
   }
 });
 
@@ -128,7 +138,8 @@ document.getElementById('canvas').addEventListener('mouseup', (event) => {
   const y = event.offsetY;
   if (tool.stroke) {
     isStrokeDown = false;
-    ctx.lineTo(parseInt(x / (512 / canvasSize)), parseInt((y / (512 / canvasSize))));
+    ctx.lineTo(parseInt(x / (canvasWidth / canvasSize)),
+      parseInt((y / (canvasHeight / canvasSize))));
     ctx.stroke();
   }
 });
@@ -146,20 +157,11 @@ document.getElementById('canvas').addEventListener('mousedown', () => {
   }
 });
 
-document.getElementById('range').addEventListener('input', () => {
-  document.getElementById('value').value = `${document.getElementById('range').value} fps`;
-  fps = document.getElementById('range').value;
-  interval = 1000 / fps;
-  clearInterval(animate);
-  if (fps !== 0) {
-    animate = setInterval(animation, interval);
-  }
-});
-
+document.getElementById('range').addEventListener('input', swapFps);
 document.getElementById('canvas').addEventListener('click', swapColor);
 document.getElementById('mainColors').addEventListener('click', colorActive);
-document.getElementById('inputColorPrimary').addEventListener('input', colorPrimary)
-document.getElementById('inputColorSecondary').addEventListener('input', colorSecondary)
+document.getElementById('inputColorPrimary').addEventListener('input', colorPrimary);
+document.getElementById('inputColorSecondary').addEventListener('input', colorSecondary);
 document.getElementById('size').addEventListener('click', size);
 document.getElementById('mainItems').addEventListener('click', activeTool);
 document.addEventListener('keydown', pressKeys);
@@ -173,8 +175,9 @@ document.getElementById('apng').addEventListener('click', saveAsApng);
 
 window.onunload = () => {
   localStorage.setItem('canvas', canvas.toDataURL());
+  localStorage.setItem('frameBox', JSON.stringify(frameBox.map((item) => item.toDataURL())));
 };
 
 export {
-  ctx, interval, tool,
+  ctx, tool,
 };

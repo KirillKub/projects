@@ -1,6 +1,7 @@
 import { ctxValue } from './actions';
 
 let ctx1;
+const frameCanvasSize = 128;
 const frameBox = [];
 function createFrame() {
   const canvas1 = document.createElement('canvas');
@@ -32,7 +33,7 @@ function drawFrame() {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.src = dataURL;
-  ctx1.drawImage(img, 0, 0, 128, 128);
+  ctx1.drawImage(img, 0, 0, frameCanvasSize, frameCanvasSize);
 }
 
 export {

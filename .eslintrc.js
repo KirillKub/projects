@@ -18,6 +18,7 @@ module.exports = {
         "consistent-return": "off",
         "prefer-arrow-callback": "off",
         "radix": "off",
-        "import/no-cycle": "off"
+        "import/no-cycle": "off",
+        "import/no-mutable-exports": "off"
     }
 };

@@ -1,5 +1,5 @@
 import { frameBox } from './create';
-import { interval } from '../index';
+import { interval } from './interval';
 import { canvasSize } from '../tools/size';
 import { } from './GIFEncoder';
 import { } from './LZWEncoder';
@@ -9,6 +9,8 @@ const UPNG = require('upng-js');
 const download = require('downloadjs');
 
 let count = 0;
+const animationCanvasSize = 256;
+
 function animation() {
   const canvas = document.getElementById('animation');
   const ctx = canvas.getContext('2d');
@@ -22,7 +24,7 @@ function animation() {
   img.crossOrigin = 'Anonymous';
   img.src = dataURL;
   img.onload = function load() {
-    ctx.drawImage(img, 0, 0, 256, 256);
+    ctx.drawImage(img, 0, 0, animationCanvasSize, animationCanvasSize);
     count += 1;
     if (count === frameBox.length || count > frameBox.length) {
       count = 0;
@@ -39,11 +41,13 @@ function fullScreen() {
       }
     }
   } else {
+    // eslint-disable-next-line
     alert("User doesn't allow full screen");
   }
 }
 
 function saveAsGif() {
+  // eslint-disable-next-line
   const encoder = new GIFEncoder();
   encoder.setRepeat(0);
   encoder.setDelay(interval);
