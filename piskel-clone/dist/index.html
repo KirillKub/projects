@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header__box">
+            <div class="header__box-item">
+                <img src="../assets/images/Shape.png" alt="menu">
+                <div class="header__text">Piskel clone</div>
+            </div>
+            <div id="login">Login</div>
+            <img src="../assets/images/shape2.png" alt="menu2">
+        </div>
+    </header>
+    <main class="main">
+        <div class="main__box">
+            <div class="main__box-item">
+                <div class="main__items" id="mainItems">
+                    <div class="main__items-box" id="paintBucket"><img src="../assets/images/fill-drip.png" alt="fill"><span>Paint bucket</span></div>
+                    <div class="main__items-box" id="chooseColor"><img src="../assets/images/icon-upload.png" alt="color"><span>Choose color</span></div>
+                    <div class="main__items-box" id="pencil"><img src="../assets/images/pencil.png" alt="pencil"><span>Pencil</span></div>
+                    <div class="main__items-box" id="stroke"><img src="../assets/images/stroke.png" alt="stroke"><span>Stroke</span></div>
+                    <div class="main__items-box" id="eraser"><img src="../assets/images/eraser-solid.svg" width="45px" alt="eraser"><span>Eraser</span></div>
+                    <div class="main__items-box" id="bucket"><img src="../assets/images/bucket.png" width="16px" alt="bucket"><span>Paint all pixels of the same color</span></div>
+                </div>
+                <div class="main__colors" id="mainColors">
+                    <div class="main__colors-box active" id="primaryColor"><input type="color" id="inputColorPrimary" value="#ff0000"><span>Primary</span></div>
+                    <div class="main__colors-box" id="secondaryColor"><input type="color" id="inputColorSecondary" value="#006aff"><span>Secondary</span></div>
+                    <div class="main__colors-box" id="changeSize">
+                        <div>Size cursor:</div>
+                        <div id="size1"></div>
+                        <div id="size2"></div>
+                        <div id="size3"></div>
+                        <div id="size4"></div>
+                    </div>
+                </div>
+                <div class="keys" id="keys">Swap Keys</div>
+            </div>
+            <div>
+                <div id="addFrames"></div>
+                <button id='addNewFrame'>Add new frame</button>
+            </div>
+            <div class="main__canvas">
+                <div><button id="clear">Clear</button></div>
+                <div class="canvas-box"><canvas id="canvas" width="128" height="128"></canvas></div>
+                <div class="main__canvas-size" id="size">
+                    <div class="main__canvas-size__item" id="size32">32x32</div>
+                    <div class="main__canvas-size__item" id="size64">64x64</div>
+                    <div class="main__canvas-size__item active" id="size128">128x128</div>
+                </div>
+            </div>
+            <div>
+                <canvas id="animation" width="256" height="256"></canvas>
+                <div class="range"><input type="text" id="value" value="12 fps">
+                    <input type="range" min="0" max="24" name="" id="range">
+                </div>
+                <div><span>Save as: </span><span id="gif">GIF </span><span id="apng">APNG</span></div>
+            </div>
+        </div>
+        <div class="swapKeys" id="swapKeys">
+            <div><span>paint bucket</span><input type="text" class="inputKey" value="B"></div>
+            <div><span>choose color</span><input type="text" class="inputKey" value="C"></div>
+            <div><span>pencil</span><input type="text" class="inputKey" value="P"></div>
+            <div><span>stroke</span><input type="text" class="inputKey" value="S"></div>
+            <div><span>eraser</span><input type="text" class="inputKey" value="E"></div>
+            <div><span>bucket</span><input type="text" class="inputKey" value="A"></div>
+            <button class="continue" id="continue">Continue</button>
+        </div>    
+    </main>
+    <script src="main.js"></script>
+</body>
+</html>
