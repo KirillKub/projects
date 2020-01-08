@@ -17,5 +17,7 @@ module.exports = {
         "no-continue": "off",
         "consistent-return": "off",
         "prefer-arrow-callback": "off",
+        "radix": "off",
+        "import/no-cycle": "off"
     }
 };

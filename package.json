@@ -22,7 +22,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack",
-    "lint": "./node_modules/.bin/eslint piskel-clone/*.js"
+    "lint": "./node_modules/.bin/eslint piskel-clone/**"
   },
   "author": "",
   "license": "ISC"
