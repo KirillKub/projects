@@ -14,6 +14,7 @@ import {
 import { swapKeys } from './tools/swapKeys';
 import { swapFps } from './frames/interval';
 import signIn from './signIn/signIn';
+import initImg from './importImage/images';
 
 const canvasWidth = 512;
 const canvasHeight = 512;
@@ -25,6 +26,7 @@ canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
+initImg();
 createFrame();
 drawFrame();
 

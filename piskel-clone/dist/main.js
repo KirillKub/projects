@@ -61765,6 +61765,110 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./piskel-clone/assets/images/Shape.png":
+/*!**********************************************!*\
+  !*** ./piskel-clone/assets/images/Shape.png ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "82e910a1de9a58df7757a53c55b53500.png");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/bucket.png":
+/*!***********************************************!*\
+  !*** ./piskel-clone/assets/images/bucket.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "9eefcf2f05e86658076c473276dc71e8.png");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/eraser-solid.svg":
+/*!*****************************************************!*\
+  !*** ./piskel-clone/assets/images/eraser-solid.svg ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "12d5b61ec442938ea75fcb5f7f73c167.svg");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/fill-drip.png":
+/*!**************************************************!*\
+  !*** ./piskel-clone/assets/images/fill-drip.png ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "06128b352b61fc4c0bfbdeef1c9bd0ec.png");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/icon-upload.png":
+/*!****************************************************!*\
+  !*** ./piskel-clone/assets/images/icon-upload.png ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "50073b06b89f93de4d0be89edb91d0e1.png");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/pencil.png":
+/*!***********************************************!*\
+  !*** ./piskel-clone/assets/images/pencil.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "a48f68494ffbf8ba706a15e4f6b41efc.png");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/shape2.png":
+/*!***********************************************!*\
+  !*** ./piskel-clone/assets/images/shape2.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "85d629aa789cdda4ab569bbfd81f4659.png");
+
+/***/ }),
+
+/***/ "./piskel-clone/assets/images/stroke.png":
+/*!***********************************************!*\
+  !*** ./piskel-clone/assets/images/stroke.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "e6ebd39568e979add611368da55cb9c0.png");
+
+/***/ }),
+
 /***/ "./piskel-clone/canvas/clear.js":
 /*!**************************************!*\
   !*** ./piskel-clone/canvas/clear.js ***!
@@ -63622,6 +63726,56 @@ function swapFps() {
 
 /***/ }),
 
+/***/ "./piskel-clone/importImage/images.js":
+/*!********************************************!*\
+  !*** ./piskel-clone/importImage/images.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initImg; });
+/* harmony import */ var _assets_images_fill_drip_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../assets/images/fill-drip.png */ "./piskel-clone/assets/images/fill-drip.png");
+/* harmony import */ var _assets_images_icon_upload_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../assets/images/icon-upload.png */ "./piskel-clone/assets/images/icon-upload.png");
+/* harmony import */ var _assets_images_pencil_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../assets/images/pencil.png */ "./piskel-clone/assets/images/pencil.png");
+/* harmony import */ var _assets_images_stroke_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../assets/images/stroke.png */ "./piskel-clone/assets/images/stroke.png");
+/* harmony import */ var _assets_images_eraser_solid_svg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../assets/images/eraser-solid.svg */ "./piskel-clone/assets/images/eraser-solid.svg");
+/* harmony import */ var _assets_images_bucket_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../assets/images/bucket.png */ "./piskel-clone/assets/images/bucket.png");
+/* harmony import */ var _assets_images_Shape_png__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../assets/images/Shape.png */ "./piskel-clone/assets/images/Shape.png");
+/* harmony import */ var _assets_images_shape2_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../assets/images/shape2.png */ "./piskel-clone/assets/images/shape2.png");
+
+
+
+
+
+
+
+
+
+
+function initImg(){
+    let img = document.getElementById('paintBucketImg');
+    img.src = _assets_images_fill_drip_png__WEBPACK_IMPORTED_MODULE_0__["default"];
+    let img2 = document.getElementById('chooseColorImg');
+    img2.src = _assets_images_icon_upload_png__WEBPACK_IMPORTED_MODULE_1__["default"];
+    let img3 = document.getElementById('pencilImg');
+    img3.src = _assets_images_pencil_png__WEBPACK_IMPORTED_MODULE_2__["default"];
+    let img4 = document.getElementById('strokeImg');
+    img4.src = _assets_images_stroke_png__WEBPACK_IMPORTED_MODULE_3__["default"];
+    let img5 = document.getElementById('eraserImg');
+    img5.src = _assets_images_eraser_solid_svg__WEBPACK_IMPORTED_MODULE_4__["default"];
+    let img6 = document.getElementById('bucketImg');
+    img6.src = _assets_images_bucket_png__WEBPACK_IMPORTED_MODULE_5__["default"];
+    let img7 = document.getElementById('menuImg');
+    img7.src = _assets_images_Shape_png__WEBPACK_IMPORTED_MODULE_6__["default"];
+    let img8 = document.getElementById('menu2Img');
+    img8.src = _assets_images_shape2_png__WEBPACK_IMPORTED_MODULE_7__["default"];
+}
+
+
+/***/ }),
+
 /***/ "./piskel-clone/index.js":
 /*!*******************************!*\
   !*** ./piskel-clone/index.js ***!
@@ -63646,6 +63800,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tools_swapKeys__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./tools/swapKeys */ "./piskel-clone/tools/swapKeys.js");
 /* harmony import */ var _frames_interval__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./frames/interval */ "./piskel-clone/frames/interval.js");
 /* harmony import */ var _signIn_signIn__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./signIn/signIn */ "./piskel-clone/signIn/signIn.js");
+/* harmony import */ var _importImage_images__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./importImage/images */ "./piskel-clone/importImage/images.js");
+
 
 
 
@@ -63669,6 +63825,7 @@ canvas.style.width = '512px';
 canvas.style.height = '512px';
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
+Object(_importImage_images__WEBPACK_IMPORTED_MODULE_12__["default"])();
 Object(_frames_create__WEBPACK_IMPORTED_MODULE_5__["createFrame"])();
 Object(_frames_create__WEBPACK_IMPORTED_MODULE_5__["drawFrame"])();
 
